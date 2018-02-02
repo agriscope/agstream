@@ -3,9 +3,13 @@ Register to
 https://pypi.python.org/pypi?%3Aaction=register_form
 
 
+pip install twine
 
-python setup.py register
+#prepare package
+
+python setup.py sdist
+python setup.py bdist_wheel
 
 
-python setup.py sdist upload
-
+#upload
+twine upload dist/*
