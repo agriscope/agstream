@@ -16,7 +16,7 @@ from agstream.session import AgspSession
 
 
 session = AgspSession()
-session.login('masnumeriqueAgStream', '1AgStream', launchScanAgribase=True)
+session.login('masnumeriqueAgStream', '1AgStream', updateAgribaseInfo=True)
 
 session.describe()
 

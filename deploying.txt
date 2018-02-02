@@ -1,0 +1,11 @@
+
+Register to
+https://pypi.python.org/pypi?%3Aaction=register_form
+
+
+
+python setup.py register
+
+
+python setup.py sdist upload
+
