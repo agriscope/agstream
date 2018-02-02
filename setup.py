@@ -64,11 +64,11 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Development Status :: 1 - Planning",
-        "License :: LGPL",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Natural Language :: French",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 2.7",
-        "Topic :: IOT",
+        "Topic :: Database :: Database Engines/Servers",
     ],
  
  
@@ -86,7 +86,7 @@ setup(
  
     # A fournir uniquement si votre licence n'est pas listée dans "classifiers"
     # ce qui est notre cas
-    license="LGPL",
+    #license="LGPL",
  
     # Il y a encore une chiée de paramètres possibles, mais avec ça vous
     # couvrez 90% des besoins
