@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>agstream.session module &#8212; AgStream 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AgStream 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="agstream-session-module">
+<h1>agstream.session module<a class="headerlink" href="#agstream-session-module" title="Permalink to this headline">¶</a></h1>
+<p>&#64;author: renaud</p>
+<dl class="class">
+<dt id="agstream.session.AgspSession">
+<em class="property">class </em><code class="descclassname">agstream.session.</code><code class="descname">AgspSession</code><span class="sig-paren">(</span><em>server='jsonapi.agriscope.fr'</em>, <em>timezoneName=u'Europe/Paris'</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>ALlow to be authentificate, and too get Agriscope devices, and to retreive data
+as an Pandas Dataframe</p>
+<dl class="attribute">
+<dt id="agstream.session.AgspSession.agribases">
+<code class="descname">agribases</code><em class="property"> = []</em><a class="headerlink" href="#agstream.session.AgspSession.agribases" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of agribase for the last user specified</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.session.AgspSession.debug">
+<code class="descname">debug</code><em class="property"> = False</em><a class="headerlink" href="#agstream.session.AgspSession.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>debug flag</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.session.AgspSession.describe">
+<code class="descname">describe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return some information about the session.
+Login, Agribases count, timezone</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.session.AgspSession.getAgribase">
+<code class="descname">getAgribase</code><span class="sig-paren">(</span><em>searchPattern_p</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession.getAgribase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tools to retreive an Agribase by name or by serialNumber in the session&#8217;s
+agribase list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>searchPattern_p</strong> &#8211; String or Int (Part of name, or Agribase serialNumber)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An agribase object corresponding to pattern, or None if not found</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.session.AgspSession.getAgribaseDataframe">
+<code class="descname">getAgribaseDataframe</code><span class="sig-paren">(</span><em>agribase_p</em>, <em>from_p=None</em>, <em>to_p=None</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession.getAgribaseDataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference external" href="https://pandas.pydata.org/">Pandas</a>  Dataframe fill with data
+generated by the Agribase.
+It gets data from the Agriscope Server.
+The :timezone used is the timezone used by the session</p>
+<p>Use the period specified by the from_p and the to_p parameters.</p>
+<p>If from_p AND to_p is not specified, the period is choosen automatically from
+[now - 3 days =&gt; now]</p>
+<p>If from_p is not specified and to_p is specified, the function return a range 
+between [to_p - 3 days =&gt; to_p]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>agribase_p</strong> &#8211; Agribase object wanted.</li>
+<li><strong>from_p</strong> &#8211; From date</li>
+<li><strong>to_p</strong> &#8211; To date.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pandas.pydata.org/">Pandas</a>  Dataframe with data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.session.AgspSession.getSensorDataframe">
+<code class="descname">getSensorDataframe</code><span class="sig-paren">(</span><em>sensor</em>, <em>from_p=None</em>, <em>to_p=None</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession.getSensorDataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference external" href="https://pandas.pydata.org/">Pandas</a>  Dataframe fill with data
+generated by the sensor.
+It gets data from the Agriscope Server.
+The :timezone used is the timezone used by the session</p>
+<p>Use the period specified by the from_p and the to_p parameters.</p>
+<p>If from_p AND to_p is not specified, the period is choosen automatically from
+[now - 3 days =&gt; now]</p>
+<p>If from_p is not specified and to_p is specified, the function return a range 
+between [to_p - 3 days =&gt; to_p]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>agribase_p</strong> &#8211; Agribase object wanted.</li>
+<li><strong>from_p</strong> &#8211; From date</li>
+<li><strong>to_p</strong> &#8211; To date.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://pandas.pydata.org/">Pandas</a>  Dataframe with data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.session.AgspSession.login">
+<code class="descname">login</code><span class="sig-paren">(</span><em>login_p</em>, <em>password_p</em>, <em>updateAgribaseInfo=False</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authentificate user by the Agriscope API
+If login and password are correct, the function store the user&#8217;s sessionId.
+This sessionId can be used later to getAgriabse informations or to get data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>login_p</strong> &#8211; User&#8217;s login</td>
+</tr>
+</tbody>
+</table>
+<p>:param password_p : User&#8217;s password
+:param updateAgribaseInfo : default: False, if True, get the last agribases 
+information from the Agriscope server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if login OK or False</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.session.AgspSession.set_debug">
+<code class="descname">set_debug</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.session.AgspSession.set_debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the debug flag. More verbose</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/agstream.session.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AgStream 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Agriscope.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+    </div>
+  </body>
+</html>

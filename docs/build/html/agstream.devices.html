@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>agstream.devices module &#8212; AgStream 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AgStream 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-agstream.devices">
+<span id="agstream-devices-module"></span><h1>agstream.devices module<a class="headerlink" href="#module-agstream.devices" title="Permalink to this headline">¶</a></h1>
+<p>Created on 23 mai 2014</p>
+<p>&#64;author: renaud</p>
+<div class="section" id="agriscope-objects">
+<h2>Agriscope Objects<a class="headerlink" href="#agriscope-objects" title="Permalink to this headline">¶</a></h2>
+<p>Python object of Agribase IOT devices.</p>
+<dl class="class">
+<dt id="agstream.devices.Agribase">
+<em class="property">class </em><code class="descclassname">agstream.devices.</code><code class="descname">Agribase</code><a class="headerlink" href="#agstream.devices.Agribase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class implementing necessary information for an Agribase</p>
+<p>It hold stuff like name, serialNumber, GPS coordinates, lastActivity</p>
+<p>It contains sensors list.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Objects are build from the json stream comming from the agriscope server</p>
+</div>
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.agspInternalId">
+<code class="descname">agspInternalId</code><em class="property"> = 0</em><a class="headerlink" href="#agstream.devices.Agribase.agspInternalId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Agribase key in thesAgriscope server database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.devices.Agribase.getSensors">
+<code class="descname">getSensors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#agstream.devices.Agribase.getSensors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of sensors belonging to the Agribases</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.intervalInSeconds">
+<code class="descname">intervalInSeconds</code><em class="property"> = 900</em><a class="headerlink" href="#agstream.devices.Agribase.intervalInSeconds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.lastActivity">
+<code class="descname">lastActivity</code><em class="property"> = datetime.datetime(1971, 1, 1, 0, 0, tzinfo=&lt;UTC&gt;)</em><a class="headerlink" href="#agstream.devices.Agribase.lastActivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Last registered activity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.lat">
+<code class="descname">lat</code><em class="property"> = 0.0</em><a class="headerlink" href="#agstream.devices.Agribase.lat" title="Permalink to this definition">¶</a></dt>
+<dd><p>GPS coordinate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.devices.Agribase.loadFromJson">
+<code class="descname">loadFromJson</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.devices.Agribase.loadFromJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Agribase informations from the json flow coming from Agriscope API</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.long">
+<code class="descname">long</code><em class="property"> = 0.0</em><a class="headerlink" href="#agstream.devices.Agribase.long" title="Permalink to this definition">¶</a></dt>
+<dd><p>GPS coordinate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.name">
+<code class="descname">name</code><em class="property"> = '?'</em><a class="headerlink" href="#agstream.devices.Agribase.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Agribase name</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.serialNumber">
+<code class="descname">serialNumber</code><em class="property"> = 0</em><a class="headerlink" href="#agstream.devices.Agribase.serialNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Agriabse serial number</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.start">
+<code class="descname">start</code><em class="property"> = datetime.datetime(1970, 1, 1, 0, 0, tzinfo=&lt;UTC&gt;)</em><a class="headerlink" href="#agstream.devices.Agribase.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>First registered activity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Agribase.utctz">
+<code class="descname">utctz</code><em class="property"> = &lt;UTC&gt;</em><a class="headerlink" href="#agstream.devices.Agribase.utctz" title="Permalink to this definition">¶</a></dt>
+<dd><p>timezone</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="agstream.devices.Sensor">
+<em class="property">class </em><code class="descclassname">agstream.devices.</code><code class="descname">Sensor</code><a class="headerlink" href="#agstream.devices.Sensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class implementing necessary information for an single sensor</p>
+<p>Contains information like name, sensorType, measuretype and internal agriscope
+key needed to get data by the Agriscope API</p>
+<dl class="attribute">
+<dt id="agstream.devices.Sensor.agspSensorId">
+<code class="descname">agspSensorId</code><em class="property"> = 0</em><a class="headerlink" href="#agstream.devices.Sensor.agspSensorId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Agriscope internal key of this sensor</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.devices.Sensor.loadFromJson">
+<code class="descname">loadFromJson</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.devices.Sensor.loadFromJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Sensor informations from the json flow coming from Sensor API</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Sensor.measureType">
+<code class="descname">measureType</code><em class="property"> = '?'</em><a class="headerlink" href="#agstream.devices.Sensor.measureType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measure type sampled by the sensor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Sensor.modulePosition">
+<code class="descname">modulePosition</code><em class="property"> = 0</em><a class="headerlink" href="#agstream.devices.Sensor.modulePosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Physical module position in the Agribase device</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Sensor.name">
+<code class="descname">name</code><em class="property"> = '?'</em><a class="headerlink" href="#agstream.devices.Sensor.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name of the sensor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Sensor.sensorPosition">
+<code class="descname">sensorPosition</code><em class="property"> = 0</em><a class="headerlink" href="#agstream.devices.Sensor.sensorPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Physical sensor position within the module</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="agstream.devices.Sensor.sensorType">
+<code class="descname">sensorType</code><em class="property"> = '?'</em><a class="headerlink" href="#agstream.devices.Sensor.sensorType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of the sensors</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">agstream.devices module</a><ul>
+<li><a class="reference internal" href="#agriscope-objects">Agriscope Objects</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/agstream.devices.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">AgStream 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Agriscope.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.6.
+    </div>
+  </body>
+</html>
