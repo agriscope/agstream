@@ -16,6 +16,7 @@ from agstream.session import AgspSession
 
 
 session = AgspSession()
+ssession = AgspSession()
 session.login('masnumeriqueAgStream', '1AgStream', updateAgribaseInfo=True)
 
 session.describe()
@@ -30,6 +31,9 @@ for abs in session.agribases :
     df.to_excel(xlsFileName,engine='openpyxl')
     
 print u'Fin du programme'
+
+"""
+
 '''
 for abs in session.agribases :
     print abs.name
