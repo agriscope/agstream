@@ -1,18 +1,36 @@
-# agstream
+=========
+Agstream
+=========
+
 Agriscope data interface for python
 
-2018 01 20 : First version
-Agstream Lib - Agriscope data inferface for python
-==================================================
-
 This module allows to get data from yours Agribases programmatically
-Data are retreived as an Pandas Datagrame
+Data are retreived as an Pandas Datagrams
 
-You can install it bye pip:
+The development map will introduce data computing capabilities, to enhance
+data analysis comming from agricultural field.
 
+
+What's New
+===========
+- First version (02 / 2018)
+
+Dependencies
+=============
+
+Agstream is written to be use with python 2.7
+It requires `Pandas`_ (>= 0.12.0)::
+
+    pip install pandas
+
+Installations
+=============
     pip install agstream
+    
 
-Use case:
+Uses cases
+==========    
+
 
     >>> from agstream.session import AgspSession
     >>> session = AgspSession()
