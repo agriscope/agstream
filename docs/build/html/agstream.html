@@ -62,6 +62,12 @@ the Agriscope API.</p>
 <dl class="class">
 <dt id="agstream.connector.AgspConnecteur">
 <em class="property">class </em><code class="descclassname">agstream.connector.</code><code class="descname">AgspConnecteur</code><span class="sig-paren">(</span><em>server=u'jsonapi.agriscope.fr'</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.connector.AgspConnecteur" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raw connector to the Agriscope web service</p>
+<p>Handle the agriscope session id, store it and use it when calls to 
+agriscope api json web service</p>
+<dl class="attribute">
+<dt id="agstream.connector.AgspConnecteur.debug">
+<code class="descname">debug</code><a class="headerlink" href="#agstream.connector.AgspConnecteur.debug" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the two roots in the quadratic equation:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
 </pre></div>
@@ -145,10 +151,22 @@ the quadratic polynomial</td>
 </tr>
 </tbody>
 </table>
-<dl class="attribute">
-<dt id="agstream.connector.AgspConnecteur.debug">
-<code class="descname">debug</code><a class="headerlink" href="#agstream.connector.AgspConnecteur.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>debug&#8217;s docstring</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="agstream.connector.AgspConnecteur.getAgribaseIntervaleInSeconds">
+<code class="descname">getAgribaseIntervaleInSeconds</code><span class="sig-paren">(</span><em>serialNumber_p</em><span class="sig-paren">)</span><a class="headerlink" href="#agstream.connector.AgspConnecteur.getAgribaseIntervaleInSeconds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sampling intervall for an Agribase</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Param:</th><td class="field-body">serialNumber_p: Agriscope serial number</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A integer, samplin in second</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -515,7 +533,10 @@ information from the Agriscope server.</p>
 </div>
 <div class="section" id="module-agstream">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-agstream" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="agstream-module">
+<h3>Agstream Module<a class="headerlink" href="#agstream-module" title="Permalink to this headline">¶</a></h3>
 <p>Necessary stuff to connect and to use data from the Agriscope server</p>
+</div>
 </div>
 </div>
 
@@ -538,7 +559,10 @@ information from the Agriscope server.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#agstream-session-module">agstream.session module</a></li>
-<li><a class="reference internal" href="#module-agstream">Module contents</a></li>
+<li><a class="reference internal" href="#module-agstream">Module contents</a><ul>
+<li><a class="reference internal" href="#agstream-module">Agstream Module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
