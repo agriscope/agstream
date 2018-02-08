@@ -1,6 +1,6 @@
-=========
+==============
 Agstream
-=========
+==============
 
 Agriscope data interface for python
 
