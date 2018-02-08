@@ -1,5 +1,5 @@
-==============
-Django Pandas
+
+AgspStream
 ==============
 .. image:: https://secure.travis-ci.org/chrisdev/django-pandas.png?branch=master
    :target: http://travis-ci.org/chrisdev/django-pandas
