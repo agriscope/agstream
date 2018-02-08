@@ -34,6 +34,6 @@ Uses cases
     from agstream.session import AgspSession
     session = AgspSession()
     session.login('masnumeriqueAgStream', '1AgStream', updateAgribaseInfo=True)
-    >>> for abs in session.agribases :
-    >>>     df = session.getAgribaseDataframe(abs)
-    >>>     print df.tail()
+    for abs in session.agribases :
+        df = session.getAgribaseDataframe(abs)
+        print df.tail()
