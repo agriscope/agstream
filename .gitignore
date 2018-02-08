@@ -4,6 +4,8 @@
 
 *.egg-info
 *.pot
+.project
+.pypirc
 *.py[co]
 .tox/
 __pycache__
