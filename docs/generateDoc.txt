@@ -1,7 +1,7 @@
 # to extract doc from code
 
 cd .\docs\
-sphinx-apidoc -f -o .\source\ ..\agspstream\
+sphinx-apidoc -f -o .\source\ ..\agstream\
 
 
 # to generate doc
