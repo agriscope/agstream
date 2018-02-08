@@ -1,10 +1,7 @@
 
 AgspStream
 ==============
-.. image:: https://secure.travis-ci.org/chrisdev/django-pandas.png?branch=master
-   :target: http://travis-ci.org/chrisdev/django-pandas
-.. image:: https://coveralls.io/repos/chrisdev/django-pandas/badge.png?branch=master
-   :target: https://coveralls.io/r/chrisdev/django-pandas
+
    
 Agriscope data interface for python
 
