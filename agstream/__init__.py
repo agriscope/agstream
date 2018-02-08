@@ -6,7 +6,7 @@
     Necessary stuff to connect and to use data from the Agriscope server
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 from session import AgspSession
