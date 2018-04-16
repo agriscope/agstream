@@ -229,7 +229,7 @@ class AgspSession :
         date, values = self.__loadSensorDataFlat(sensorid, from_p, to_p)
         dataFrame = self.__convertDataToPandasFrame(date,values, label)
         if dataFrame is not None :
-            dataFrame.tz_convert(self.tz)
+            dataFrame=dataFrame.tz_convert(self.tz)
         return dataFrame
   
     
@@ -313,7 +313,7 @@ class AgspSession :
         if unixtimeStamp < 0 :
             unixtimeStamp = 1
         #print "unixtimestamp=" + unicode(unixtimeStamp)
-        returnv = self.tz.localize(datetime.datetime.utcfromtimestamp(unixtimeStamp/1000))
+        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(unixtimeStamp/1000))
         #print unicode(returnv)
         #print "%s" % returnv.year
         #if (returnv.year == 1992) :
