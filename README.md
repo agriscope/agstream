@@ -14,7 +14,8 @@ data analysis comming from agricultural field.
 
 What's New
 ===========
-- First version (02 / 2018)
+- (2018/05) Solve bug on from, to date 
+- (2018/02)First version 
 
 Dependencies
 =============
