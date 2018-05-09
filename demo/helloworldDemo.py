@@ -28,7 +28,7 @@ for abs in session.agribases :
         print sensor.name
         df=session.getSensorDataframe(sensor)
         if df is not None :
-            print df.head()
+            print df.tail()
         
     
 print u'Fin du programme'
