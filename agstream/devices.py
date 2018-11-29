@@ -73,22 +73,40 @@ class Agribase :
         self.long = json['longitude']
         self.serialNumber = json['serialNumber']
         self.agspInternalId =json ['internalId']
+        
         self.lastActivity=self.utctz.localize(datetime.datetime.utcfromtimestamp(json ['lastActivityDate']/1000))
         self.start= self.utctz.localize(datetime.datetime.utcfromtimestamp(json ['startupDate']/1000))
+        if u'samplingMinute' in json :
+            self.intervalInSeconds = json[u'samplingMinute']
+        else :
+            self.intervalInSeconds = -1
+        if u'agriscopeType' in json :
+            self.agriscopeType = json[u'agriscopeType']
+        else :
+            self.agriscopeType = u'NaN'
+        
+        if u'linkType' in json :
+            self.linkType = json[u'linkType']
+        else :
+            self.linkType = u'Nan'
+        
+        
+        
         self.sensors=list()
 
-        for tmpJson in json ['sensors'] :
+        for tmpJson in json [u'sensors'] :
             tmpSens = Sensor()
             tmpSens.loadFromJson(tmpJson)
             self.sensors.append(tmpSens)
         
     
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return unicode(self).encode(u'utf-8')
 
         
     def __unicode__(self): 
-        return (self.name+'('+unicode(self.serialNumber)+')'+ " containing " + unicode(len(self.sensors)) + " sensors")
+        returnv = u'%s(%s) %s %s containing %s sensors' % (self.name,unicode(self.serialNumber),self.agriscopeType, self.linkType,unicode(len(self.sensors)))
+        return (returnv)
 '''
     Classe de capteur contenant ses informations.
 '''   

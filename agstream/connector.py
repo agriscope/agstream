@@ -17,6 +17,9 @@
 
 import json
 import urllib
+import time
+import datetime
+import pytz
 
 class AgspError(Exception):
 
@@ -142,10 +145,56 @@ class AgspConnecteur :
         id_p = self.agspSessionId
         from_p = long (from_p * 1000)
         to_p = long (to_p * 1000)
-
+        t0 = time.time()
         url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getSensorData","parameters":{"personalKey":"DUMMY","sensorInternalId":'+unicode(sensorId)+',"agriscopeSessionId":' + unicode(id_p) + ',"from":' + unicode(from_p) + ',"to":' + unicode(to_p) + '}}'
         tmpJson= self.__executeJsonRequest(url, "getSensorData()") 
+        #print "      "
+        #print "      "
+        #print tmpJson
+        now = datetime.datetime.now()
+
+        t1 = time.time()
+        nbData = len(tmpJson['atomicResults'][0]['dataValues'])    
+        deltams = ( t1 - t0) * 1000 
+
+
+       # if nbData > 2 :
+       #     dat0 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][0])
+       #     dat1 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][-1])
+            #print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms first %s last %s ' % (now,nbData,deltams,nbData/deltams,dat0,dat1))
+       # else :
+       #     print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms ' % (now,nbData,deltams,nbData/deltams))
+        
         return tmpJson['atomicResults'][0]['dataDates'],tmpJson['atomicResults'][0]['dataValues']
+    
+    def __convertUnixTimeStamp2PyDate (self,unixtimeStamp) :
+        '''
+        Convert a unixtime stamp (provenant du serveur agriscope) en Temps python avec une timezone UTC
+        '''
+        #
+        # Comportement bizarre de sync 1199/thermomètre(-485966252) Marsillargues Marseillais Nord(1199) T° AIR °C no user parameter
+        # lors de la syncrhonination de base de l'univers
+        # il y a vait:
+#unixtimestamp=1412937447499
+#unixtimestamp=1412937832500
+#unixtimestamp=1404910637499
+#unixtimestamp=-30373006607501
+#======================================================================
+#ERROR: test_firstUnivers (tests.agspUniversTests.TestAgspUnivers)
+#----------------------------------------------------------------------
+#Traceback (most recent call last):
+#  File "C:\Users\guillaume\Documents\Developpement\django\trunk\datatooling\pandas\tests\agspUniversTests.py", line 37, in test_firstUnivers
+        #print unixtimeStamp
+        if unixtimeStamp < 0 :
+            unixtimeStamp = 1
+        #print "unixtimestamp=" + unicode(unixtimeStamp)
+        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(unixtimeStamp/1000))
+        #print unicode(returnv)
+        #print "%s" % returnv.year
+        #if (returnv.year == 1992) :
+            
+            #print "%d %s" % (unixtimeStamp, unicode(returnv))
+        return returnv  
       
       
     def getAgribaseIntervaleInSeconds(self,serialNumber_p):
@@ -214,78 +263,3 @@ class AgspConnecteur :
             
     debug = property(None, set_debug, None, "debug's docstring")
             
-        
-    """
-    Return the two roots in the quadratic equation::
-
-      a*x**2 + b*x + c = 0
-
-    or written with math typesetting
-
-    .. math:: ax^2 + bx + c = 0
-
-    The returned roots are real or complex numbers,
-    depending on the values of the arguments `a`, `b`,
-    and `c`.
-
-    Parameters
-    ----------
-    a: int, real, complex
-       coefficient of the quadratic term
-    b: int, real, complex
-       coefficient of the linear term
-    c: int, real, complex
-       coefficient of the constant term
-    verbose: bool, optional
-       prints the quantity ``b**2 - 4*a*c`` and if the
-       roots are real or complex
-
-    Returns
-    -------
-    root1, root2: real, complex
-        the roots of the quadratic polynomial.
-
-    Raises
-    ------
-    ValueError:
-        when `a` is zero
-
-    See Also
-    --------
-    :class:`Quadratic`: which is a class for quadratic polynomials
-        that also has a :func:`Quadratic.roots` method for computing
-        the roots of a quadratic polynomial. There is also a class
-        :class:`~linear.Linear` in the module :mod:`linear`
-        (i.e., :class:`linear.Linear`).
-
-    Notes
-    -----
-    The algorithm is a straightforward implementation of
-    a very well known formula [1]_.
-
-    References
-    ----------
-    .. [1] Any textbook on mathematics or
-           `Wikipedia <http://en.wikipedia.org/wiki/Quadratic_equation>`_.
-
-    Examples
-    --------
-    >>> roots(-1, 2, 10)
-    (-5.3166247903553998, 1.3166247903553998)
-    >>> roots(-1, 2, -10)
-    ((-2-3j), (-2+3j))
-
-    Alternatively, we can in a doc string list the arguments and
-    return values in a table
-
-    ==========   =============   ================================
-    Parameter    Type            Description
-    ==========   =============   ================================
-    a            float/complex   coefficient for quadratic term
-    b            float/complex   coefficient for linear term
-    c            float/complex   coefficient for constant term
-    r1, r2       float/complex   return: the two roots of
-                                 the quadratic polynomial
-    ==========   =============   ================================
-    """
-    

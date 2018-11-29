@@ -1,27 +1,34 @@
 agstream package
 ================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    agstream.computing
+
 Submodules
 ----------
 
-agstream\.connector module
---------------------------
+agstream.connector module
+-------------------------
 
 .. automodule:: agstream.connector
     :members:
     :undoc-members:
     :show-inheritance:
 
-agstream\.devices module
-------------------------
+agstream.devices module
+-----------------------
 
 .. automodule:: agstream.devices
     :members:
     :undoc-members:
     :show-inheritance:
 
-agstream\.session module
-------------------------
+agstream.session module
+-----------------------
 
 .. automodule:: agstream.session
     :members:

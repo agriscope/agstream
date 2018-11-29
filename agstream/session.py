@@ -63,6 +63,7 @@ class AgspSession :
     L'objectif est d'avoir la liste des agribase a jour, en particulier pour la
     date de la derniere activitée
     '''
+
     def login (self, login_p, password_p, updateAgribaseInfo = False):
         """
         Login
@@ -157,6 +158,7 @@ class AgspSession :
         for sens in agribase_p.sensors:
             df = self.getSensorDataframe(sens, from_p, to_p)
             if df is not None and len(df) > 0 :
+                #print frame.head()
                 frame = pd.concat([frame,df],axis=1)
         return frame
     
@@ -213,7 +215,8 @@ class AgspSession :
         for tmpjson in json['agribases'] :
             abse = Agribase()
             abse.loadFromJson(tmpjson)
-            abse.intervalInSeconds = self.connector.getAgribaseIntervaleInSeconds(abse.serialNumber)
+            #if abse.intervalInSeconds == -1 :
+                #abse.intervalInSeconds = self.connector.getAgribaseIntervaleInSeconds(abse.serialNumber)
             self.agribases.append(abse)
         return self.agribases
     
@@ -321,5 +324,8 @@ class AgspSession :
             #print "%d %s" % (unixtimeStamp, unicode(returnv))
         return returnv    
     
-    
+def _touchLogin (self, login_p, password_p):
+        status , sessionId = self.connector.login(login_p,password_p)
+        self.status=status
+        self.sessionId = sessionId
     

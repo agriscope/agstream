@@ -14,6 +14,7 @@ data analysis comming from agricultural field.
 
 What's New
 ===========
+- (2018/05) Add functionnal information on Agribases (type, sampling)
 - (2018/05) Solve bug on from, to date 
 - (2018/02)First version 
 

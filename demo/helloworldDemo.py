@@ -16,16 +16,14 @@ from agstream.session import AgspSession
 
 
 session = AgspSession()
-ssession = AgspSession()
-session.login('masnumeriqueAgStream', '1AgStream', updateAgribaseInfo=True)
+session.login(u'masnumeriqueAgStream', u'1AgStream', updateAgribaseInfo=True)
 
 session.describe()
 
-print ""
+print u""
 for abs in session.agribases :
-    print abs.name
     for sensor in abs.sensors :
-        print sensor.name
+        print u"%s %s" %  (abs.name,sensor.name)
         df=session.getSensorDataframe(sensor)
         if df is not None :
             print df.tail()
