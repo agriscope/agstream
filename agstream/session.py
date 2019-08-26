@@ -10,7 +10,14 @@
 
 @author: renaud
 """
+from __future__ import print_function
+from __future__ import division
 
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
+from past.utils import old_div
 from agstream.devices import Agribase,Sensor
 from agstream.connector import AgspConnecteur
 import time
@@ -27,7 +34,7 @@ from pytz import timezone
   Permet de se logguer, recuperer les agribases, scanner et trouver les datasources.
 '''
     
-class AgspSession :
+class AgspSession(object) :
     """
     
     Main front session object:
@@ -86,15 +93,15 @@ class AgspSession :
         if status == True :
             # reinitialise 
             self.agribases = list()
-            print login_p + u" logging OK."
+            print(login_p + u" logging OK.")
             if updateAgribaseInfo == True :
                 self.__refreshAgribases()
         if self.debug == True :
             if status == True:
-                print login_p + u" logging OK."
+                print(login_p + u" logging OK.")
                 
             else :
-                print u"Erreur de connection pour " + login_p + "."
+                print(u"Erreur de connection pour " + login_p + ".")
         self.status=status
         self.sessionId = sessionId
         return status
@@ -196,13 +203,13 @@ class AgspSession :
         Return some information about the session.
         Login, Agribases count, timezone
         """
-        print "login " +  self.connector.lastLogin
-        print "    - " + str (len (self.agribases)) + " agribases."
-        print "    - Timezone = %s " % self.timezoneName
+        print("login " +  self.connector.lastLogin)
+        print("    - " + str (len (self.agribases)) + " agribases.")
+        print("    - Timezone = %s " % self.timezoneName)
         count = 0
         for abse in self.agribases :
     
-            print "    - " + unicode(abse.name) + ""
+            print("    - " + str(abse.name) + "")
 
   
 
@@ -316,7 +323,7 @@ class AgspSession :
         if unixtimeStamp < 0 :
             unixtimeStamp = 1
         #print "unixtimestamp=" + unicode(unixtimeStamp)
-        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(unixtimeStamp/1000))
+        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(old_div(unixtimeStamp,1000)))
         #print unicode(returnv)
         #print "%s" % returnv.year
         #if (returnv.year == 1992) :

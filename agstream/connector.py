@@ -14,9 +14,16 @@
 
 
 """
+from __future__ import print_function
+from __future__ import division
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import json
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import time
 import datetime
 import pytz
@@ -43,10 +50,10 @@ class AgspError(Exception):
     def __unicode__(self): 
         return repr(self.value)
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return str(self).encode('utf-8')
 
 
-class AgspConnecteur :
+class AgspConnecteur(object) :
     """
     Raw connector to the Agriscope web service
     
@@ -116,7 +123,7 @@ class AgspConnecteur :
         if sessionid_p == -1 :
             sessionid_p = self.agspSessionId
         
-        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribases","parameters":{"agriscopeSessionId":' + unicode(sessionid_p) + '}}'
+        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribases","parameters":{"agriscopeSessionId":' + str(sessionid_p) + '}}'
         return self.__executeJsonRequest(url, "getAgribases()") 
         
             
@@ -143,10 +150,10 @@ class AgspConnecteur :
         :return: A tuble of two array (datesArray[], valuesArray[])
         """
         id_p = self.agspSessionId
-        from_p = long (from_p * 1000)
-        to_p = long (to_p * 1000)
+        from_p = int (from_p * 1000)
+        to_p = int (to_p * 1000)
         t0 = time.time()
-        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getSensorData","parameters":{"personalKey":"DUMMY","sensorInternalId":'+unicode(sensorId)+',"agriscopeSessionId":' + unicode(id_p) + ',"from":' + unicode(from_p) + ',"to":' + unicode(to_p) + '}}'
+        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getSensorData","parameters":{"personalKey":"DUMMY","sensorInternalId":'+str(sensorId)+',"agriscopeSessionId":' + str(id_p) + ',"from":' + str(from_p) + ',"to":' + str(to_p) + '}}'
         tmpJson= self.__executeJsonRequest(url, "getSensorData()") 
         #print "      "
         #print "      "
@@ -188,7 +195,7 @@ class AgspConnecteur :
         if unixtimeStamp < 0 :
             unixtimeStamp = 1
         #print "unixtimestamp=" + unicode(unixtimeStamp)
-        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(unixtimeStamp/1000))
+        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(old_div(unixtimeStamp,1000)))
         #print unicode(returnv)
         #print "%s" % returnv.year
         #if (returnv.year == 1992) :
@@ -221,45 +228,44 @@ class AgspConnecteur :
         try : 
             
             if self.debug == True :
-                    print url
+                    print(url)
             str_response=""    
             # RECORD MODE
             retry=3
             i = 0
             while retry > 0 :
                 try :
-                    response = urllib.urlopen( url)
+                    response = urllib.request.urlopen( url)
                     retry = -1
-                except Exception, e:
+                except Exception as e:
                     retry = retry - 1
                     i = i+1
-                    print str(i) + " retry connection "
+                    print(str(i) + " retry connection ")
                     
             if retry == 0 :
-                print "Probleme de connexion pour aller vers " + url
+                print("Probleme de connexion pour aller vers " + url)
                 return
             str_response = response.read().decode('utf-8')
 
             if self.debug == True :
-                print str_response
+                print(str_response)
             obj = json.loads(str_response,strict=False)
             infomessage="N/A"
             if 'infoMessage' in obj :
                 infomessage = obj['infoMessage']
                 if  "session invalide" in infomessage:
                     if len(method) > 0 :
-                        print u"Numero de session invalide dans l'appel de " + method +" par l'api."
+                        print(u"Numero de session invalide dans l'appel de " + method +" par l'api.")
                     else :
-                        print u"Numero de session invalide  par l'api."
+                        print(u"Numero de session invalide  par l'api.")
                         raise AgspError(u"Erreur de connection")
             return (obj)
-        except Exception, e:
-            print e.__doc__
-            print e.message
+        except Exception as e:
+            print(e.__doc__)
+            print(e.message)
             if len(method) > 0 :
                 raise AgspError(u"Erreur de connection dans " + method )
             else :
                 raise AgspError(u"Erreur de connection "  )
             
-    debug = property(None, set_debug, None, "debug's docstring")
             

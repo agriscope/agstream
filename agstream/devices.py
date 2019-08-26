@@ -11,7 +11,11 @@
 
 
 """
+from __future__ import division
 
+from builtins import str
+from builtins import object
+from past.utils import old_div
 import datetime
 from pytz import timezone
 import pytz 
@@ -23,7 +27,7 @@ import pytz
     Classe de l'agribase, contient sa liste de capteurs.
     Transforme la string JSON provenant du serveur Agriscope en objet direct.
 '''
-class Agribase :
+class Agribase(object) :
     """
     Class implementing necessary information for an Agribase
  
@@ -74,8 +78,8 @@ class Agribase :
         self.serialNumber = json['serialNumber']
         self.agspInternalId =json ['internalId']
         
-        self.lastActivity=self.utctz.localize(datetime.datetime.utcfromtimestamp(json ['lastActivityDate']/1000))
-        self.start= self.utctz.localize(datetime.datetime.utcfromtimestamp(json ['startupDate']/1000))
+        self.lastActivity=self.utctz.localize(datetime.datetime.utcfromtimestamp(old_div(json ['lastActivityDate'],1000)))
+        self.start= self.utctz.localize(datetime.datetime.utcfromtimestamp(old_div(json ['startupDate'],1000)))
         if u'samplingMinute' in json :
             self.intervalInSeconds = json[u'samplingMinute']
         else :
@@ -101,16 +105,16 @@ class Agribase :
         
     
     def __str__(self):
-        return unicode(self).encode(u'utf-8')
+        return str(self).encode(u'utf-8')
 
         
     def __unicode__(self): 
-        returnv = u'%s(%s) %s %s containing %s sensors' % (self.name,unicode(self.serialNumber),self.agriscopeType, self.linkType,unicode(len(self.sensors)))
+        returnv = u'%s(%s) %s %s containing %s sensors' % (self.name,str(self.serialNumber),self.agriscopeType, self.linkType,str(len(self.sensors)))
         return (returnv)
 '''
     Classe de capteur contenant ses informations.
 '''   
-class Sensor :
+class Sensor(object) :
     """
     Class implementing necessary information for an single sensor
  
@@ -144,7 +148,7 @@ class Sensor :
         self.agspSensorId = json['internalId']
  
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        return str(self).encode('utf-8')
         
     def __unicode__(self): 
-        return (self.name+'('+unicode(self.agspSensorId)+')'+ " " +self.sensorType + ", " + self.measureType)
+        return (self.name+'('+str(self.agspSensorId)+')'+ " " +self.sensorType + ", " + self.measureType)

@@ -10,6 +10,7 @@ log into the agriscope server + retreive data from agribases.
 
 @author: guillaume
 '''
+from __future__ import print_function
 
 
 from agstream.session import AgspSession
@@ -20,16 +21,16 @@ session.login(u'masnumeriqueAgStream', u'1AgStream', updateAgribaseInfo=True)
 
 session.describe()
 
-print u""
+print(u"")
 for abs in session.agribases :
     for sensor in abs.sensors :
-        print u"%s %s" %  (abs.name,sensor.name)
+        print(u"%s %s" %  (abs.name,sensor.name))
         df=session.getSensorDataframe(sensor)
         if df is not None :
-            print df.tail()
+            print(df.tail())
         
     
-print u'Fin du programme'
+print(u'Fin du programme')
 
 
 '''
