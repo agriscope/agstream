@@ -18,16 +18,16 @@ from builtins import object
 from past.utils import old_div
 import datetime
 from pytz import timezone
-import pytz 
+import pytz
 
 
-
-
-'''
+"""
     Classe de l'agribase, contient sa liste de capteurs.
     Transforme la string JSON provenant du serveur Agriscope en objet direct.
-'''
-class Agribase(object) :
+"""
+
+
+class Agribase(object):
     """
     Class implementing necessary information for an Agribase
  
@@ -40,81 +40,92 @@ class Agribase(object) :
         Objects are build from the json stream comming from the agriscope server
     
     """
-    name="?" 
+
+    name = "?"
     """Agribase name"""
-    lat = 0.0 
+    lat = 0.0
     """GPS coordinate"""
-    long = 0.0 
+    long = 0.0
     """GPS coordinate"""
-    serialNumber=0
+    serialNumber = 0
     """Agriabse serial number"""
-    agspInternalId=0
+    agspInternalId = 0
     """Agribase key in thesAgriscope server database"""
     utctz = pytz.utc
     """timezone"""
-    lastActivity= utctz.localize(datetime.datetime(1971, 1, 1,0,0,0))
+    lastActivity = utctz.localize(datetime.datetime(1971, 1, 1, 0, 0, 0))
     """Last registered activity"""
-    start = utctz.localize(datetime.datetime(1970, 1, 1,0,0,0))
+    start = utctz.localize(datetime.datetime(1970, 1, 1, 0, 0, 0))
     """First registered activity"""
 
-    intervalInSeconds = 60*15
-    
-    def __init__ (self):
-        self.start=datetime.datetime(1970, 1, 1,0,0,0)
-    
+    intervalInSeconds = 60 * 15
+
+    def __init__(self):
+        self.start = datetime.datetime(1970, 1, 1, 0, 0, 0)
+
     def getSensors(self):
         """
         Return the list of sensors belonging to the Agribases
         """
         return self.sensors
-    
-    def loadFromJson (self,json):
+
+    def loadFromJson(self, json):
         """
             Update Agribase informations from the json flow coming from Agriscope API
-        """      
-        self.name= json['name']
-        self.lat= json['latitude']
-        self.long = json['longitude']
-        self.serialNumber = json['serialNumber']
-        self.agspInternalId =json ['internalId']
-        
-        self.lastActivity=self.utctz.localize(datetime.datetime.utcfromtimestamp(old_div(json ['lastActivityDate'],1000)))
-        self.start= self.utctz.localize(datetime.datetime.utcfromtimestamp(old_div(json ['startupDate'],1000)))
-        if u'samplingMinute' in json :
-            self.intervalInSeconds = json[u'samplingMinute']
-        else :
-            self.intervalInSeconds = -1
-        if u'agriscopeType' in json :
-            self.agriscopeType = json[u'agriscopeType']
-        else :
-            self.agriscopeType = u'NaN'
-        
-        if u'linkType' in json :
-            self.linkType = json[u'linkType']
-        else :
-            self.linkType = u'Nan'
-        
-        
-        
-        self.sensors=list()
+        """
+        self.name = json["name"]
+        self.lat = json["latitude"]
+        self.long = json["longitude"]
+        self.serialNumber = json["serialNumber"]
+        self.agspInternalId = json["internalId"]
 
-        for tmpJson in json [u'sensors'] :
+        self.lastActivity = self.utctz.localize(
+            datetime.datetime.utcfromtimestamp(old_div(json["lastActivityDate"], 1000))
+        )
+        self.start = self.utctz.localize(
+            datetime.datetime.utcfromtimestamp(old_div(json["startupDate"], 1000))
+        )
+        if u"samplingMinute" in json:
+            self.intervalInSeconds = json[u"samplingMinute"]
+        else:
+            self.intervalInSeconds = -1
+        if u"agriscopeType" in json:
+            self.agriscopeType = json[u"agriscopeType"]
+        else:
+            self.agriscopeType = u"NaN"
+
+        if u"linkType" in json:
+            self.linkType = json[u"linkType"]
+        else:
+            self.linkType = u"Nan"
+
+        self.sensors = list()
+
+        for tmpJson in json[u"sensors"]:
             tmpSens = Sensor()
             tmpSens.loadFromJson(tmpJson)
             self.sensors.append(tmpSens)
-        
-    
-    def __str__(self):
-        return str(self).encode(u'utf-8')
 
-        
-    def __unicode__(self): 
-        returnv = u'%s(%s) %s %s containing %s sensors' % (self.name,str(self.serialNumber),self.agriscopeType, self.linkType,str(len(self.sensors)))
-        return (returnv)
-'''
+    def __str__(self):
+        return str(self).encode(u"utf-8")
+
+    def __unicode__(self):
+        returnv = u"%s(%s) %s %s containing %s sensors" % (
+            self.name,
+            str(self.serialNumber),
+            self.agriscopeType,
+            self.linkType,
+            str(len(self.sensors)),
+        )
+        return returnv
+
+
+"""
     Classe de capteur contenant ses informations.
-'''   
-class Sensor(object) :
+"""
+
+
+class Sensor(object):
     """
     Class implementing necessary information for an single sensor
  
@@ -123,32 +134,43 @@ class Sensor(object) :
    
     
     """
-    name="?";
+
+    name = "?"
     """name of the sensor"""
-    sensorType="?"
+    sensorType = "?"
     """Type of the sensors"""
-    measureType="?"
+    measureType = "?"
     """Measure type sampled by the sensor """
-    agspSensorId=0;
+    agspSensorId = 0
     """ Agriscope internal key of this sensor"""
-    modulePosition=0
+    modulePosition = 0
     """ Physical module position in the Agribase device"""
-    sensorPosition=0
+    sensorPosition = 0
     """Physical sensor position within the module """
-    def __init__ (self):
-        self.name="?"
-        
-    def loadFromJson (self,json):
+
+    def __init__(self):
+        self.name = "?"
+
+    def loadFromJson(self, json):
         """
             Update Sensor informations from the json flow coming from Sensor API
-        """   
-        self.name= json['name']
-        self.sensorType=json['sensorType']
-        self.measureType=json['measureType']
-        self.agspSensorId = json['internalId']
- 
+        """
+        self.name = json["name"]
+        self.sensorType = json["sensorType"]
+        self.measureType = json["measureType"]
+        self.agspSensorId = json["internalId"]
+
     def __str__(self):
-        return str(self).encode('utf-8')
-        
-    def __unicode__(self): 
-        return (self.name+'('+str(self.agspSensorId)+')'+ " " +self.sensorType + ", " + self.measureType)
+        return str(self).encode("utf-8")
+
+    def __unicode__(self):
+        return (
+            self.name
+            + "("
+            + str(self.agspSensorId)
+            + ")"
+            + " "
+            + self.sensorType
+            + ", "
+            + self.measureType
+        )

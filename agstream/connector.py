@@ -18,6 +18,7 @@ from __future__ import print_function
 from __future__ import division
 
 from future import standard_library
+
 standard_library.install_aliases()
 from builtins import str
 from builtins import object
@@ -27,6 +28,7 @@ import urllib.request, urllib.parse, urllib.error
 import time
 import datetime
 import pytz
+
 
 class AgspError(Exception):
 
@@ -45,31 +47,35 @@ class AgspError(Exception):
         Posibility to downloads data for each sensor
     
     """
+
     def __init__(self, value):
         self.value = value
-    def __unicode__(self): 
+
+    def __unicode__(self):
         return repr(self.value)
+
     def __str__(self):
-        return str(self).encode('utf-8')
+        return str(self).encode("utf-8")
 
 
-class AgspConnecteur(object) :
+class AgspConnecteur(object):
     """
     Raw connector to the Agriscope web service
     
     Handle the agriscope session id, store it and use it when calls to 
     agriscope api json web service
     """
-    
-    debug=True
-    def __init__ (self, server = u'jsonapi.agriscope.fr' ):
+
+    debug = True
+
+    def __init__(self, server=u"jsonapi.agriscope.fr"):
         self.sessionOpen = False
         self.agspSessionId = 0
-        self.server = u'http://' + server
-        self.application = u'/agriscope-web/app'
-        self.lastLogin = 'undefined'
-        self.lastPassword = 'undefined'
-        self.debug=False
+        self.server = u"http://" + server
+        self.application = u"/agriscope-web/app"
+        self.lastLogin = "undefined"
+        self.lastPassword = "undefined"
+        self.debug = False
 
     def set_debug(self, value):
         """
@@ -79,7 +85,7 @@ class AgspConnecteur(object) :
         """
         self.debug = value
 
-    def login (self, login_p, password_p):
+    def login(self, login_p, password_p):
         """
         Allow to be authentificate in the agriscope server
         The authentification key (sessionId) received from the server is stored 
@@ -91,24 +97,32 @@ class AgspConnecteur(object) :
         """
         self.lastLogin = login_p
         self.lastPassword = password_p
-        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"login","parameters":{"login":"' + login_p + '","password":"' + password_p + '"}}'
-        obj = self.__executeJsonRequest (url,'login()')
-        if obj['returnStatus'] != 'RETURN_STATUS_OK' :
+        url = (
+            self.server
+            + self.application
+            + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"login","parameters":{"login":"'
+            + login_p
+            + '","password":"'
+            + password_p
+            + '"}}'
+        )
+        obj = self.__executeJsonRequest(url, "login()")
+        if obj["returnStatus"] != "RETURN_STATUS_OK":
             print("Failed to open the agriscope session for login " + login_p)
-            print(obj['infoMessage'])
+            print(obj["infoMessage"])
             self.sessionOpen = False
             self.agspSessionId = -1
-        elif obj['loginOk'] == True:
+        elif obj["loginOk"] == True:
             # print("Agriscope session open for login " + login_p)
             self.sessionOpen = True
-            self.agspSessionId = obj['agriscopeSessionId']
-        elif obj['loginOk'] == False:
+            self.agspSessionId = obj["agriscopeSessionId"]
+        elif obj["loginOk"] == False:
             print("Agriscope session failed for login " + login_p)
             self.sessionOpen = False
-            self.agspSessionId = obj['agriscopeSessionId']
+            self.agspSessionId = obj["agriscopeSessionId"]
         return (self.sessionOpen, self.agspSessionId)
 
-    def getAgribases(self, sessionid_p = -1):
+    def getAgribases(self, sessionid_p=-1):
         """
         Return a raw dictionnary as received from the server
         By default the API is called with stored sessionId
@@ -120,14 +134,19 @@ class AgspConnecteur(object) :
         :return: A raw dict as received from the server
         :rtype: dict
         """
-        if sessionid_p == -1 :
+        if sessionid_p == -1:
             sessionid_p = self.agspSessionId
-        
-        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribases","parameters":{"agriscopeSessionId":' + str(sessionid_p) + '}}'
-        return self.__executeJsonRequest(url, "getAgribases()") 
-        
-            
-    def getSensorData(self, sensorId, from_p = None,  to_p = None):
+
+        url = (
+            self.server
+            + self.application
+            + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribases","parameters":{"agriscopeSessionId":'
+            + str(sessionid_p)
+            + "}}"
+        )
+        return self.__executeJsonRequest(url, "getAgribases()")
+
+    def getSensorData(self, sensorId, from_p=None, to_p=None):
         """
         Return timeseries as an array of data and date from the the sensor id.
         
@@ -150,61 +169,76 @@ class AgspConnecteur(object) :
         :return: A tuble of two array (datesArray[], valuesArray[])
         """
         id_p = self.agspSessionId
-        from_p = int (from_p * 1000)
-        to_p = int (to_p * 1000)
+        from_p = int(from_p * 1000)
+        to_p = int(to_p * 1000)
         t0 = time.time()
-        url = self.server + self.application + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getSensorData","parameters":{"personalKey":"DUMMY","sensorInternalId":'+str(sensorId)+',"agriscopeSessionId":' + str(id_p) + ',"from":' + str(from_p) + ',"to":' + str(to_p) + '}}'
-        tmpJson= self.__executeJsonRequest(url, "getSensorData()") 
-        #print "      "
-        #print "      "
-        #print tmpJson
+        url = (
+            self.server
+            + self.application
+            + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getSensorData","parameters":{"personalKey":"DUMMY","sensorInternalId":'
+            + str(sensorId)
+            + ',"agriscopeSessionId":'
+            + str(id_p)
+            + ',"from":'
+            + str(from_p)
+            + ',"to":'
+            + str(to_p)
+            + "}}"
+        )
+        tmpJson = self.__executeJsonRequest(url, "getSensorData()")
+        # print "      "
+        # print "      "
+        # print tmpJson
         now = datetime.datetime.now()
 
         t1 = time.time()
-        nbData = len(tmpJson['atomicResults'][0]['dataValues'])    
-        deltams = ( t1 - t0) * 1000 
+        nbData = len(tmpJson["atomicResults"][0]["dataValues"])
+        deltams = (t1 - t0) * 1000
 
+        # if nbData > 2 :
+        #     dat0 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][0])
+        #     dat1 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][-1])
+        # print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms first %s last %s ' % (now,nbData,deltams,nbData/deltams,dat0,dat1))
+        # else :
+        #     print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms ' % (now,nbData,deltams,nbData/deltams))
 
-       # if nbData > 2 :
-       #     dat0 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][0])
-       #     dat1 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][-1])
-            #print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms first %s last %s ' % (now,nbData,deltams,nbData/deltams,dat0,dat1))
-       # else :
-       #     print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms ' % (now,nbData,deltams,nbData/deltams))
-        
-        return tmpJson['atomicResults'][0]['dataDates'],tmpJson['atomicResults'][0]['dataValues']
-    
-    def __convertUnixTimeStamp2PyDate (self,unixtimeStamp) :
-        '''
+        return (
+            tmpJson["atomicResults"][0]["dataDates"],
+            tmpJson["atomicResults"][0]["dataValues"],
+        )
+
+    def __convertUnixTimeStamp2PyDate(self, unixtimeStamp):
+        """
         Convert a unixtime stamp (provenant du serveur agriscope) en Temps python avec une timezone UTC
-        '''
+        """
         #
         # Comportement bizarre de sync 1199/thermomètre(-485966252) Marsillargues Marseillais Nord(1199) T° AIR °C no user parameter
         # lors de la syncrhonination de base de l'univers
         # il y a vait:
-#unixtimestamp=1412937447499
-#unixtimestamp=1412937832500
-#unixtimestamp=1404910637499
-#unixtimestamp=-30373006607501
-#======================================================================
-#ERROR: test_firstUnivers (tests.agspUniversTests.TestAgspUnivers)
-#----------------------------------------------------------------------
-#Traceback (most recent call last):
-#  File "C:\Users\guillaume\Documents\Developpement\django\trunk\datatooling\pandas\tests\agspUniversTests.py", line 37, in test_firstUnivers
-        #print unixtimeStamp
-        if unixtimeStamp < 0 :
+        # unixtimestamp=1412937447499
+        # unixtimestamp=1412937832500
+        # unixtimestamp=1404910637499
+        # unixtimestamp=-30373006607501
+        # ======================================================================
+        # ERROR: test_firstUnivers (tests.agspUniversTests.TestAgspUnivers)
+        # ----------------------------------------------------------------------
+        # Traceback (most recent call last):
+        #  File "C:\Users\guillaume\Documents\Developpement\django\trunk\datatooling\pandas\tests\agspUniversTests.py", line 37, in test_firstUnivers
+        # print unixtimeStamp
+        if unixtimeStamp < 0:
             unixtimeStamp = 1
-        #print "unixtimestamp=" + unicode(unixtimeStamp)
-        returnv = pytz.utc.localize(datetime.datetime.utcfromtimestamp(old_div(unixtimeStamp,1000)))
-        #print unicode(returnv)
-        #print "%s" % returnv.year
-        #if (returnv.year == 1992) :
-            
-            #print "%d %s" % (unixtimeStamp, unicode(returnv))
-        return returnv  
-      
-      
-    def getAgribaseIntervaleInSeconds(self,serialNumber_p):
+        # print "unixtimestamp=" + unicode(unixtimeStamp)
+        returnv = pytz.utc.localize(
+            datetime.datetime.utcfromtimestamp(old_div(unixtimeStamp, 1000))
+        )
+        # print unicode(returnv)
+        # print "%s" % returnv.year
+        # if (returnv.year == 1992) :
+
+        # print "%d %s" % (unixtimeStamp, unicode(returnv))
+        return returnv
+
+    def getAgribaseIntervaleInSeconds(self, serialNumber_p):
         """
         Return the sampling intervall for an Agribase
         
@@ -213,59 +247,62 @@ class AgspConnecteur(object) :
         
         :return: A integer, samplin in second
         """
-        url = "http://jsonmaint.agriscope.fr/tools/CHECK/agbs.php?sn=%d" % serialNumber_p
-        json=self.__executeJsonRequest(url)
+        url = (
+            "http://jsonmaint.agriscope.fr/tools/CHECK/agbs.php?sn=%d" % serialNumber_p
+        )
+        json = self.__executeJsonRequest(url)
         returnv = -1
-        if "intervalInSec" in json :
+        if "intervalInSec" in json:
             tmp = json["intervalInSec"]
-            if tmp == 'N/A' :
+            if tmp == "N/A":
                 return 15
             returnv = int(tmp)
         return returnv
-    
-    
-    def __executeJsonRequest (self, url, method=""):
-        try : 
-            
-            if self.debug == True :
-                    print(url)
-            str_response=""    
+
+    def __executeJsonRequest(self, url, method=""):
+        try:
+
+            if self.debug == True:
+                print(url)
+            str_response = ""
             # RECORD MODE
-            retry=3
+            retry = 3
             i = 0
-            while retry > 0 :
-                try :
-                    response = urllib.request.urlopen( url)
+            while retry > 0:
+                try:
+                    response = urllib.request.urlopen(url)
                     retry = -1
                 except Exception as e:
                     retry = retry - 1
-                    i = i+1
+                    i = i + 1
                     print(str(i) + " retry connection ")
-                    
-            if retry == 0 :
+
+            if retry == 0:
                 print("Probleme de connexion pour aller vers " + url)
                 return
-            str_response = response.read().decode('utf-8')
+            str_response = response.read().decode("utf-8")
 
-            if self.debug == True :
+            if self.debug == True:
                 print(str_response)
-            obj = json.loads(str_response,strict=False)
-            infomessage="N/A"
-            if 'infoMessage' in obj :
-                infomessage = obj['infoMessage']
-                if  "session invalide" in infomessage:
-                    if len(method) > 0 :
-                        print(u"Numero de session invalide dans l'appel de " + method +" par l'api.")
-                    else :
+            obj = json.loads(str_response, strict=False)
+            infomessage = "N/A"
+            if "infoMessage" in obj:
+                infomessage = obj["infoMessage"]
+                if "session invalide" in infomessage:
+                    if len(method) > 0:
+                        print(
+                            u"Numero de session invalide dans l'appel de "
+                            + method
+                            + " par l'api."
+                        )
+                    else:
                         print(u"Numero de session invalide  par l'api.")
                         raise AgspError(u"Erreur de connection")
-            return (obj)
+            return obj
         except Exception as e:
             print(e.__doc__)
             print(e.message)
-            if len(method) > 0 :
-                raise AgspError(u"Erreur de connection dans " + method )
-            else :
-                raise AgspError(u"Erreur de connection "  )
-            
-            
+            if len(method) > 0:
+                raise AgspError(u"Erreur de connection dans " + method)
+            else:
+                raise AgspError(u"Erreur de connection ")
