@@ -1,7 +1,5 @@
-
 AgspStream
 ==============
-
    
 Agriscope data interface for python
 
@@ -14,7 +12,7 @@ data analysis comming from agricultural field.
 
 What's New
 ===========
-- (2019/08) Porting to python 3.6
+- (2019/08) Porting to python 3
 - (2018/05) Add functionnal information on Agribases (type, sampling)
 - (2018/05) Solve bug on from, to date 
 - (2018/02) First version 
@@ -23,20 +21,21 @@ Dependencies
 =============
 
 Agstream is written to be use with python 2.7 and python 3.6
-It requires `Pandas`_ (>= 0.12.0)::
+It requires Pandas  (>= 0.12.0)::
 
     pip install pandas
 
 Installations
 =============
+
     pip install agstream
     
 
 Uses cases
-==========    
-    from agstream.session import AgspSession
-    session = AgspSession()
-    session.login('masnumeriqueAgStream', '1AgStream', updateAgribaseInfo=True)
-    for abs in session.agribases :
-        df = session.getAgribaseDataframe(abs)
-        print df.tail()
+==========
+
+    >>> from agstream.session import AgspSession
+   	>>> session = AgspSession()
+   	>>> for abs in session.agribases :
+   	>>> 	df = session.getAgribaseDataframe(abs)
+	>>>     print df.tail() 
