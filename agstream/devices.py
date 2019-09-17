@@ -106,18 +106,17 @@ class Agribase(object):
             tmpSens.loadFromJson(tmpJson)
             self.sensors.append(tmpSens)
 
-    def __str__(self):
-        return str(self).encode(u"utf-8")
-
-    def __unicode__(self):
-        returnv = u"%s(%s) %s %s containing %s sensors" % (
+    def __repr__(self):
+        returnv = u"%s(%d) %s %s containing %d sensors" % (
             self.name,
-            str(self.serialNumber),
+            self.serialNumber,
             self.agriscopeType,
             self.linkType,
-            str(len(self.sensors)),
+            len(self.sensors),
         )
         return returnv
+
+    
 
 
 """
@@ -160,17 +159,6 @@ class Sensor(object):
         self.measureType = json["measureType"]
         self.agspSensorId = json["internalId"]
 
-    def __str__(self):
-        return str(self).encode("utf-8")
-
-    def __unicode__(self):
-        return (
-            self.name
-            + "("
-            + str(self.agspSensorId)
-            + ")"
-            + " "
-            + self.sensorType
-            + ", "
-            + self.measureType
-        )
+    def __repr__(self):
+        return ( "%s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))
+        

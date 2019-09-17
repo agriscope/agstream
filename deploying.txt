@@ -10,6 +10,8 @@ pip install twine
 python setup.py sdist
 python setup.py bdist_wheel
 
-
 #upload
 twine upload dist/*
+
+# Checker la distribution (formattage fichier README.md)
+twine check .\dist\

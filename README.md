@@ -12,6 +12,7 @@ data analysis comming from agricultural field.
 
 What's New
 ===========
+- (2019/09) v0.0.10 : solve some display problems
 - (2019/08) Porting to python 3
 - (2018/05) Add functionnal information on Agribases (type, sampling)
 - (2018/05) Solve bug on from, to date 
@@ -33,9 +34,14 @@ Installations
 
 Uses cases
 ==========
+	from agstream.session import AgspSession
+	session = AgspSession()
+	session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
+	session.describe()
+	for abs in session.agribases :
+	    print (u"****************************************")
+	    print (abs)
+	    df = session.getAgribaseDataframe(abs)
+	    print (df.tail())
+    print(u"Fin du programme")
 
-    >>> from agstream.session import AgspSession
-   	>>> session = AgspSession()
-   	>>> for abs in session.agribases :
-   	>>> 	df = session.getAgribaseDataframe(abs)
-	>>>     print df.tail() 

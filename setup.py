@@ -29,9 +29,11 @@ setup(
     description="Agriscope python library to access data",
     # Une description longue, sera affichée pour présenter la lib
     # Généralement on dump le README ici
+    long_description_content_type="text/markdown",
+
     long_description=open("README.md").read(),
     # Vous pouvez rajouter une liste de dépendances pour votre lib
-    # et même préciser une version. A l'installation, Python essayera de
+    # et même préciser une version . A l'installation, Python essayera de
     # les télécharger et les installer.
     #
     # Ex: ["gunicorn", "docutils >= 0.3", "lxml==0.5a7"]

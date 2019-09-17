@@ -13,23 +13,20 @@ log into the agriscope server + retreive data from agribases.
 from __future__ import print_function
 
 
+
 from agstream.session import AgspSession
-
-
 session = AgspSession()
 session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
-
 session.describe()
-
-print(u"")
-for abs in session.agribases:
-    for sensor in abs.sensors:
-        print(u"%s %s" % (abs.name, sensor.name))
-        df = session.getSensorDataframe(sensor)
-        if df is not None:
-            print(df.tail())
-
-
+for abs in session.agribases :
+    print (u"****************************************")
+    print (abs)
+    df = session.getAgribaseDataframe(abs)
+    print (u"Récuperation de %d données" % (df.shape[0] * df.shape[1]))
+    print (df.head())
+    xlsFileName = u"%s.xlsx" % abs.name 
+    print (u"Ecriture des données dans le fichier %s " % xlsFileName)
+    df.to_excel(xlsFileName,engine=u'openpyxl')
 print(u"Fin du programme")
 
 

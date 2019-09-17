@@ -51,11 +51,9 @@ class AgspError(Exception):
     def __init__(self, value):
         self.value = value
 
-    def __unicode__(self):
+   
+    def __repr__(self):
         return repr(self.value)
-
-    def __str__(self):
-        return str(self).encode("utf-8")
 
 
 class AgspConnecteur(object):
