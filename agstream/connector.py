@@ -66,11 +66,11 @@ class AgspConnecteur(object):
 
     debug = True
 
-    def __init__(self, server=u"jsonapi.agriscope.fr"):
+    def __init__(self, server=u"www.agriscope.fr"):
         self.sessionOpen = False
         self.agspSessionId = 0
         self.server = u"http://" + server
-        self.application = u"/agriscope-web/app"
+        self.application = u"/agriscope-web-reader/app"
         self.lastLogin = "undefined"
         self.lastPassword = "undefined"
         self.debug = False
@@ -120,18 +120,22 @@ class AgspConnecteur(object):
             self.agspSessionId = obj["agriscopeSessionId"]
         return (self.sessionOpen, self.agspSessionId)
 
-    def getAgribases(self, sessionid_p=-1):
+    def getAgribases(self, sessionid_p=-1, showInternalSensors=False):
         """
         Return a raw dictionnary as received from the server
         By default the API is called with stored sessionId
         
         If a optionnal sessionId is specified, the function uses this one.
         
-        :param: sessionid_p: Optionnal sessionId 
+        :param: sessionid_p: sessionId 
+        :param: showInternalSensors: shown internal sensors as Dbm,Rssi Sensors 
         
         :return: A raw dict as received from the server
         :rtype: dict
         """
+        paramShowInternalSensors="false"
+        if showInternalSensors == True :
+            paramShowInternalSensors="true"
         if sessionid_p == -1:
             sessionid_p = self.agspSessionId
 
@@ -140,6 +144,7 @@ class AgspConnecteur(object):
             + self.application
             + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribases","parameters":{"agriscopeSessionId":'
             + str(sessionid_p)
+            +',"internalSensors":' + paramShowInternalSensors
             + "}}"
         )
         return self.__executeJsonRequest(url, "getAgribases()")
