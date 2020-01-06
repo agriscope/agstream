@@ -146,6 +146,8 @@ class Sensor(object):
     """ Physical module position in the Agribase device"""
     sensorPosition = 0
     """Physical sensor position within the module """
+    
+    unit = "?"
 
     def __init__(self):
         self.name = "?"

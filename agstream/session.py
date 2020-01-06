@@ -240,7 +240,7 @@ class AgspSession(object):
         
         :return: `Pandas <https://pandas.pydata.org/>`__  Dataframe with data
         """
-        return self.__getSensorDataframe(sensor.agspSensorId, sensor.name, from_p, to_p)
+        return self.getSensorDataframeDeep(sensor.agspSensorId, sensor.name, from_p, to_p)
 
     def describe(self):
         """
@@ -252,7 +252,6 @@ class AgspSession(object):
         print("    - Timezone = %s " % self.timezoneName)
         count = 0
         for abse in self.agribases:
-
             print("    - " + str(abse.name) + "")
 
     """
@@ -270,7 +269,8 @@ class AgspSession(object):
             self.agribases.append(abse)
         return self.agribases
 
-    def __getSensorDataframe(self, sensorid, label, from_p=None, to_p=None):
+
+    def getSensorDataframeDeep(self, sensorid, label, from_p=None, to_p=None):
         if to_p == None:
             to_p = self.tz.localize(datetime.datetime.now())
         if from_p == None:
