@@ -12,6 +12,7 @@ data analysis comming from agricultural field.
 
 What's New
 ===========
+- (2020/01) v0.0.12 : export some internals methods
 - (2019/09) v0.0.10 : solve some display problems
 - (2019/08) Porting to python 3
 - (2018/05) Add functionnal information on Agribases (type, sampling)
