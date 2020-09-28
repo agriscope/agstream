@@ -18,3 +18,19 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+autodocExample.txt
+Compteur Mourvedre Rang 9.xlsx
+Debitmetre Grenache Rang 10.xlsx
+Domaine du Chapitre.xlsx
+Oliviers #1.xlsx
+Oliviers #2.xlsx
+UNUSED.xlsx
+agstream/__init__.py.bak
+agstream/connector.py.bak
+agstream/devices.py.bak
+agstream/session.py.bak
+agstream/computing/etp/etp_utils.py.bak
+demo/helloworldDemo.py.bak
+docs/source/agstream.computing.rst
+docs/source/agstream.computing.etp.rst
+demo/Domaine du Chapitre.xlsx
