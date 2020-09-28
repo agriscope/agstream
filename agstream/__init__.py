@@ -7,7 +7,7 @@
 """
 from __future__ import absolute_import
 
-__version__ = "0.0.12"
+__version__ = "0.0.13"
 
 
 from .session import AgspSession

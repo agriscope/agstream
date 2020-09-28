@@ -160,6 +160,8 @@ class Sensor(object):
         self.sensorType = json["sensorType"]
         self.measureType = json["measureType"]
         self.agspSensorId = json["internalId"]
+        self.sensorPosition = json['channelPosition']
+        self.modulePosition = json['modulePosition']
 
     def __repr__(self):
         return ( "%s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))

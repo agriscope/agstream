@@ -47,10 +47,14 @@ class AgspSession(object):
 
     debug = False
     """ debug flag """
+    
+    ms_resolution = False
+    """ timestamp millisecond resoultion """
+    
     agribases = list()
     """ list of agribase for the last user specified """
 
-    def __init__(self, server="jsonapi.agriscope.fr", timezoneName=u"Europe/Paris"):
+    def __init__(self, server="jsonapi.agriscope.fr", timezoneName=u"Europe/Paris", use_ms_resolution=False):
         self.agribases = list()
         self.connector = AgspConnecteur(server=server)
         self.set_debug(False)
@@ -59,6 +63,7 @@ class AgspSession(object):
         self.timezoneName = timezoneName
         self.tz = timezone(self.timezoneName)
         self.useInternalsSensors = False;
+        self.ms_resolution = use_ms_resolution
 
     def set_debug(self, value):
         """
@@ -380,9 +385,16 @@ class AgspSession(object):
         if unixtimeStamp < 0:
             unixtimeStamp = 1
         # print "unixtimestamp=" + unicode(unixtimeStamp)
-        returnv = pytz.utc.localize(
+        #print("unixtimestamp %f, %.2f, %.4f"% (unixtimeStamp,old_div(unixtimeStamp, 1000),unixtimeStamp/ 1000) )
+        if self.ms_resolution == True :
+            returnv = pytz.utc.localize(
+            datetime.datetime.utcfromtimestamp(unixtimeStamp/ 1000)
+            )
+        else :
+            returnv = pytz.utc.localize(
             datetime.datetime.utcfromtimestamp(old_div(unixtimeStamp, 1000))
-        )
+            )
+        #print (returnv.strftime("%d/%m/%y %HH%mm%Ss%f"))
         # print unicode(returnv)
         # print "%s" % returnv.year
         # if (returnv.year == 1992) :
