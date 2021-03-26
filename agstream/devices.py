@@ -69,6 +69,11 @@ class Agribase(object):
         """
         return self.sensors
 
+    def getSensorByAgspSensorId(self,sensor_id):
+        for sensor in self.sensors :
+            if sensor.agspSensorId == sensor_id :
+                return sensor   
+        return None
     def loadFromJson(self, json):
         """
             Update Agribase informations from the json flow coming from Agriscope API

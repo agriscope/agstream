@@ -64,7 +64,7 @@ class AgspSession(object):
         self.tz = timezone(self.timezoneName)
         self.useInternalsSensors = False;
         self.ms_resolution = use_ms_resolution
-
+  
     def set_debug(self, value):
         """
         Set the debug flag. More verbose
@@ -180,15 +180,27 @@ class AgspSession(object):
         frame = pd.DataFrame()
         frame.tz_convert(self.tz)
 
-        for sens in agribase_p.sensors:
-            df = self.getSensorDataframe(sens, from_p, to_p)
+        if to_p == None:
+            to_p = self.tz.localize(datetime.datetime.now())
+        if from_p == None:
+            from_p = to_p - timedelta(days=3)
+        
+        result_dict = self.__loadAgribaseDataFlat(agribase_p.serialNumber,from_p,to_p) 
+        for sensor_id in result_dict.keys():
+            dates,values = result_dict[sensor_id]
+            sensor = agribase_p.getSensorByAgspSensorId(sensor_id)
+            df = self.__convertDataToPandasFrame(dates, values, sensor.name)
             if df is not None and len(df) > 0:
                 # print frame.head()
                 frame = pd.concat([frame, df], axis=1)
+        
+        if frame is not None:
+            frame = frame.tz_convert(self.tz)
         return frame
+
     
     """ 
-    Retourne un dataframe pour l'agribase pour la periode demandée 
+    Retourne un dataframe pour l'agribase sur l'instant donnée [+/- 1 seconde]
     """
 
     def getAgribaseDataframeRealTime(self, agribaseSerialNumber, atDate=None):
@@ -210,13 +222,21 @@ class AgspSession(object):
         agribase = self.getAgribase(agribaseSerialNumber)
         from_p = atDate - timedelta(seconds=1);
         to_p = atDate + timedelta(seconds=1);
-        
+        result_dict = self.__loadAgribaseDataFlat(agribase.serial_number,from_p,to_p)
+        for sensor_id in result_dict.keys():
+            data_tuples = result_dict[sensor_id]
+            sensor = agribase.getSensorByAgspSensorId(sensor_id)
+
         for sens in agribase.sensors:
             df = self.getSensorDataframe(sens, from_p, to_p)
             if df is not None and len(df) > 0:
                 # print frame.head()
                 frame = pd.concat([frame, df], axis=1)
+        if frame is not None:
+            frame = frame.tz_convert(self.tz)
         return frame
+
+
 
     """ 
     Retourne un dataframe pour le capteur pour la periode demandée 
@@ -274,14 +294,13 @@ class AgspSession(object):
             self.agribases.append(abse)
         return self.agribases
 
-
-    def getSensorDataframeDeep(self, sensorid, label, from_p=None, to_p=None):
+    def getSensorDataframeDeep(self, sensorid, sensor_name, from_p=None, to_p=None):
         if to_p == None:
             to_p = self.tz.localize(datetime.datetime.now())
         if from_p == None:
             from_p = to_p - timedelta(days=3)
         date, values = self.__loadSensorDataFlat(sensorid, from_p, to_p)
-        dataFrame = self.__convertDataToPandasFrame(date, values, label)
+        dataFrame = self.__convertDataToPandasFrame(date, values, sensor_name)
         if dataFrame is not None:
             dataFrame = dataFrame.tz_convert(self.tz)
         return dataFrame
@@ -345,6 +364,10 @@ class AgspSession(object):
         return self.connector.getSensorData(
             sensorId,  self._totimestamp(from_p), self._totimestamp(to_p))
         
+    def __loadAgribaseDataFlat(self, agribase_sn=None, from_p=None, to_p=None):
+            return self.connector.getAgribaseAllSensorsData(
+            agribase_sn,  self._totimestamp(from_p), self._totimestamp(to_p))
+            
         
     def _totimestamp(self, dt_obj):
         """

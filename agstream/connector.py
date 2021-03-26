@@ -149,6 +149,98 @@ class AgspConnecteur(object):
         )
         return self.__executeJsonRequest(url, "getAgribases()")
 
+    def getAgribaseAllSensorsData(self, agribaseSn, from_p=None, to_p=None):
+        """
+        Return a map [sensorId,(array of data and date )] containing 
+        the data of all the sensor of thus agribase.
+
+        Use the period specified by the from_p and the to_p parameters.
+        
+        If from_p AND to_p is not specified, the period is choosen automatically from
+        [now - 3 days => now]
+        
+        If from_p is not specified and to_p is specified, the function return a range 
+        between [to_p - 3 days => to_p]
+        
+        
+        :param: agribaseSn: Agriscope serial number
+        :param: from_p : Datetime 
+        :param: to_p : Datetime 
+         
+        
+        :return: A map of [sensorid,tuble of two array (datesArray[], valuesArray[])]
+        """
+        id_p = self.agspSessionId
+        from_p = int(from_p * 1000)
+        to_p = int(to_p * 1000)
+        t0 = time.time()
+        url = (
+            self.server
+            + self.application
+            + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribaseAllSensorsData","parameters":{"personalKey":"DUMMY","agribaseSerialNumber":'
+            + str(agribaseSn)
+            + ',"agriscopeSessionId":'
+            + str(id_p)
+            + ',"from":'
+            + str(from_p)
+            + ',"to":'
+            + str(to_p)
+            + "}}"
+        )
+        tmpJson = self.__executeJsonRequest(url, "getAgribaseAllSensorsData()")
+        # print "      "
+        # print "      "
+        # print tmpJson
+        now = datetime.datetime.now()
+
+        # "returnStatus" : "RETURN_STATUS_OK",
+          #   "infoMessage" : "Sortie de getAllSensorTimeSeriesMapByAgribase() Récupération de 609 donnees l'agribase #1012, user login laty.",
+        # "personalKey" : "DUMMY-parcelle 09 plant JULIEN (Le borniquet)",
+        # "measureType" : "",
+        # "agribaseSerialNumber" : 1012,
+        # "agribaseInternalId" : -1,
+        # "functionCall" : "getAgribaseAllSensorsData()",
+        # "unit" : "",
+        # "from" : "17/06/2009 00:00:00 GMT +0200",
+        # "to" : "17/06/2009 23:59:59 GMT +0200",
+        # "atomicResults" : [ {
+        #   "returnStatus" : "RETURN_STATUS_OK",
+        #   "infoMessage" : "",
+        #   "personalKey" : "undefined",
+        #   "origin" : "parcelle 09 plant JULIEN (Le borniquet)/capteur sensirion thermomètre #6",
+        #   "sensorType" : "sensirion thermomètre",
+        #   "sensorInternalId" : 87039,
+        #   "agribaseSerialNumber" : 1012,
+        #   "dataCount" : 87,
+        #   "dataDates" : [ 1245189849499, 1245190840499, 1245191839499, 1245192830499, 1245193826499, 1245194816499, 1245195807499, 1245196799499, 1245197791499, 1245198781499, 1245199772499, 1245200763499, 1245201746499, 1245202735499, 1245203732499, 1245204724499, 1245205716499, 1245206707499, 1245207700499, 1245208691499, 1245209682499, 1245210675499, 1245211659499, 1245212655499, 1245213649499, 1245214642499, 1245215620499, 1245216609499, 1245217588499, 1245218564499, 1245219545499, 1245220526499, 1245221501499, 1245222475499, 1245223448499, 1245224421499, 1245225394499, 1245226368499, 1245227340499, 1245229292499, 1245230268499, 1245231245499, 1245232223499, 1245233200499, 1245234176499, 1245235153499, 1245236133499, 1245237112499, 1245238092499, 1245239067499, 1245240048499, 1245241027499, 1245242003499, 1245242980499, 1245243957499, 1245244938499, 1245245916499, 1245246895499, 1245247876499, 1245248869499, 1245249851499, 1245250828499, 1245251809499, 1245252788499, 1245253772499, 1245254759499, 1245255738499, 1245256727499, 1245257711499, 1245258697499, 1245259691499, 1245260681499, 1245261678499, 1245262682499, 1245263551499, 1245264686499, 1245265685499, 1245266683499, 1245267681499, 1245268676499, 1245269675499, 1245270670499, 1245271665499, 1245272658499, 1245273651499, 1245274644499, 1245275638499 ],
+        #   "dataValues" : [ 11.7, 11.4, 11.5, 11.7, 11.8, 11.8, 11.2, 11.2, 10.6, 10.4, 10.6, 10.7, 10.8, 10.5, 10.3, 10.2, 10.2, 10.5, 10.9, 10.3, 9.6, 9.7, 9.9, 10.0, 11.0, 11.8, 12.3, 12.9, 13.4, 14.0, 14.7, 15.6, 16.3, 17.0, 17.4, 17.9, 18.6, 19.1, 19.6, 20.4, 20.8, 20.7, 21.2, 21.1, 21.4, 21.6, 22.1, 21.5, 21.8, 21.7, 22.3, 22.6, 22.6, 22.8, 22.9, 23.1, 22.9, 23.4, 22.9, 24.1, 23.6, 22.8, 24.0, 23.4, 23.0, 23.9, 23.7, 23.2, 22.9, 23.0, 23.6, 23.2, 22.3, 22.5, 22.7, 22.3, 21.6, 20.5, 19.7, 18.9, 18.1, 17.1, 16.4, 16.0, 15.6, 15.6, 15.3 ]
+        # }, {
+        #       "returnStatus" : "RETURN_STATUS_OK",
+         #   "   infoMessage" : "",
+        #   "personalKey" : "undefined",
+        #   "origin" : "parcelle 09 plant JULIEN (Le borniquet)/girouette",
+        t1 = time.time()
+        nbData = 0
+        returnv = dict()
+        for atomic_results in tmpJson["atomicResults"] :
+            atomic_nb_data = atomic_results["dataCount"]
+            atomic_sensor_id = atomic_results["sensorInternalId"]
+            atomic_data_tuple = (atomic_results["dataDates"],atomic_results["dataValues"])
+            nbData = nbData + atomic_nb_data
+            returnv[atomic_sensor_id] = atomic_data_tuple
+        deltams = (t1 - t0) * 1000
+        # if nbData > 2 :
+        #     dat0 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][0])
+        #     dat1 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][-1])
+        # print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms first %s last %s ' % (now,nbData,deltams,nbData/deltams,dat0,dat1))
+        # else :
+        #     print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms ' % (now,nbData,deltams,nbData/deltams))
+
+        return returnv
+
+
+
+
     def getSensorData(self, sensorId, from_p=None, to_p=None):
         """
         Return timeseries as an array of data and date from the the sensor id.
