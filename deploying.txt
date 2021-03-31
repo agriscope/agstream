@@ -14,4 +14,4 @@ python setup.py bdist_wheel
 twine upload dist/*
 
 # Checker la distribution (formattage fichier README.md)
-twine check .\dist\
+twine check .\dist\agstream-1.0.1-py3-none-any.whl
