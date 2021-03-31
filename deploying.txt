@@ -4,7 +4,7 @@ https://pypi.python.org/pypi?%3Aaction=register_form
 
 
 pip install twine
-
+pip install wheel
 #prepare package
 
 python setup.py sdist

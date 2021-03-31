@@ -154,7 +154,7 @@ class AgspSession(object):
     Retourne un dataframe pour l'agribase pour la periode demandée 
     """
 
-    def getAgribaseDataframe(self, agribase_p, from_p=None, to_p=None):
+    def getAgribaseDataframe(self, agribase_p, from_p=None, to_p=None,index_by_sensor_id = False):
         """
         getAgribaseDataframe
         --------------------
@@ -189,7 +189,10 @@ class AgspSession(object):
         for sensor_id in result_dict.keys():
             dates,values = result_dict[sensor_id]
             sensor = agribase_p.getSensorByAgspSensorId(sensor_id)
-            df = self.__convertDataToPandasFrame(dates, values, sensor.name)
+            label= sensor.name
+            if index_by_sensor_id == True :
+                label = "%d"%sensor_id
+            df = self.__convertDataToPandasFrame(dates, values, label)
             if df is not None and len(df) > 0:
                 # print frame.head()
                 frame = pd.concat([frame, df], axis=1)
