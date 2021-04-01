@@ -10,7 +10,7 @@ import agstream
 # et il comporte beaucoup de paramètres
 setup(
     # le nom de votre bibliothèque, tel qu'il apparaitre sur pypi
-    name="agstream",
+    name="agstream", 
     # la version du code
     version=agstream.__version__,
     # Liste les packages à insérer dans la distribution
