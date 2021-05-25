@@ -37,6 +37,8 @@ Installations
 
 Uses cases
 ==========
+code :
+
 	from agstream.session import AgspSession
 	session = AgspSession()
 	session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
@@ -48,7 +50,8 @@ Uses cases
 	    print (df.tail())
     print(u"Fin du programme")
 
-Output 
+Output :
+
 	**************************************************
 	* Example 1 :  simplest way to get data
 	* get the data, and feed an xlsfile
