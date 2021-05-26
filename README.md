@@ -3,13 +3,13 @@ AgspStream
    
 Agriscope data interface for python
 
+
 This module allows to get data from yours Agribases programmatically
 Data are retreived as an Pandas Datagrams
 
 The development map will introduce data computing capabilities, to enhance
 data analysis comming from agricultural field.
 
-dsqsdqdsq
 
   
   
