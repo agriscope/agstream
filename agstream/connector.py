@@ -105,7 +105,11 @@ class AgspConnecteur(object):
             + '"}}'
         )
         obj = self.__executeJsonRequest(url, "login()")
-        if obj["returnStatus"] != "RETURN_STATUS_OK":
+        if obj == None :
+            print("Failed to get an answer from server " + self.server)
+            self.sessionOpen = False
+            self.agspSessionId = -1            
+        elif obj["returnStatus"] != "RETURN_STATUS_OK":
             print("Failed to open the agriscope session for login " + login_p)
             print(obj["infoMessage"])
             self.sessionOpen = False

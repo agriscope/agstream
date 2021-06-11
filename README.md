@@ -15,6 +15,7 @@ data analysis comming from agricultural field.
   
 What's New
 ===========
+- (2021/06) v1.0.3  : Optimize exception reporting when server is not joinable
 - (2021/03) v1.0.2  : Optimize sensor data retrieving
 - (2020/09) v0.0.13 : Better support of module and sensor position
 - (2020/01) v0.0.12 : export some internals methods
