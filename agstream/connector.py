@@ -192,6 +192,13 @@ class AgspConnecteur(object):
             + "}}"
         )
         tmpJson = self.__executeJsonRequest(url, "getAgribaseAllSensorsData()")
+        nbData = 0
+        returnv = dict()
+        # Si il y a un probleme avec la connection au serveur, tmpJson est None
+        # alors on sort
+        if tmpJson is None :
+            return returnv;
+
         # print "      "
         # print "      "
         # print tmpJson
@@ -224,8 +231,7 @@ class AgspConnecteur(object):
         #   "personalKey" : "undefined",
         #   "origin" : "parcelle 09 plant JULIEN (Le borniquet)/girouette",
         t1 = time.time()
-        nbData = 0
-        returnv = dict()
+
         for atomic_results in tmpJson["atomicResults"] :
             atomic_nb_data = atomic_results["dataCount"]
             atomic_sensor_id = atomic_results["sensorInternalId"]
