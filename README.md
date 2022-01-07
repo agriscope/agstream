@@ -15,6 +15,7 @@ data analysis comming from agricultural field.
   
 What's New
 ===========
+- (2022/01) v2.0.0  : Add capabilities to get virtual datasources
 - (2021/06) v1.0.4  : Again optimize exception reporting when server is not joinable
 - (2021/06) v1.0.3  : Optimize exception reporting when server is not joinable
 - (2021/03) v1.0.2  : Optimize sensor data retrieving
@@ -29,7 +30,7 @@ What's New
 Dependencies
 =============
 
-Agstream is written to be use with python 2.7 and python 3.6
+Agstream is written to be use with  python 3
 It requires Pandas  (>= 0.12.0)::
 
     pip install pandas
