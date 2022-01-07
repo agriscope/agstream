@@ -28,7 +28,9 @@ import urllib.request, urllib.parse, urllib.error
 import time
 import datetime
 import pytz
-
+from agstream.virtual_datasources import VirtualDataSource
+import logging
+logger = logging.getLogger(__name__)
 
 class AgspError(Exception):
 
@@ -66,22 +68,16 @@ class AgspConnecteur(object):
 
     debug = True
 
-    def __init__(self, server=u"www.agriscope.fr"):
+    def __init__(self, server=u"jsonapi.agriscope.fr"):
         self.sessionOpen = False
         self.agspSessionId = 0
         self.server = u"http://" + server
-        self.application = u"/agriscope-web-reader/app"
+        self.application = u"/agriscope-web/app"
         self.lastLogin = "undefined"
         self.lastPassword = "undefined"
         self.debug = False
 
-    def set_debug(self, value):
-        """
-        Execution is verbose in debug mode
-        
-        :param value : True ou False
-        """
-        self.debug = value
+
 
     def login(self, login_p, password_p):
         """
@@ -106,12 +102,12 @@ class AgspConnecteur(object):
         )
         obj = self.__executeJsonRequest(url, "login()")
         if obj == None :
-            print("Failed to get an answer from server " + self.server)
+            logger.error("Failed to get an answer from server " + self.server)
             self.sessionOpen = False
             self.agspSessionId = -1            
         elif obj["returnStatus"] != "RETURN_STATUS_OK":
-            print("Failed to open the agriscope session for login " + login_p)
-            print(obj["infoMessage"])
+            logger.error("Failed to open the agriscope session for login " + login_p)
+            logger.error(obj["infoMessage"])
             self.sessionOpen = False
             self.agspSessionId = -1
         elif obj["loginOk"] == True:
@@ -119,7 +115,7 @@ class AgspConnecteur(object):
             self.sessionOpen = True
             self.agspSessionId = obj["agriscopeSessionId"]
         elif obj["loginOk"] == False:
-            print("Agriscope session failed for login " + login_p)
+            logger.error("Agriscope session failed for login " + login_p)
             self.sessionOpen = False
             self.agspSessionId = obj["agriscopeSessionId"]
         return (self.sessionOpen, self.agspSessionId)
@@ -248,9 +244,6 @@ class AgspConnecteur(object):
 
         return returnv
 
-
-
-
     def getSensorData(self, sensorId, from_p=None, to_p=None):
         """
         Return timeseries as an array of data and date from the the sensor id.
@@ -312,6 +305,152 @@ class AgspConnecteur(object):
             tmpJson["atomicResults"][0]["dataValues"],
         )
 
+
+    def get_virtual_datasource_data(self, agribaseSn, datasourceHashKey, from_p=None, to_p=None, id_p=-1):
+        id_p = self.agspSessionId
+        from_p = int(from_p * 1000)
+        to_p = int(to_p * 1000)
+
+        # convert datasourceHashKey to server datasource key, dividing by the serial number
+        # Lors de la
+        realAgspDatasourceKey = datasourceHashKey / agribaseSn
+        # print "getjson abs=%d key=%d , realkey = %d" % (datasourceHashKey, agribaseSn,realAgspDatasourceKey )
+
+      
+        url = (
+            self.server
+            + self.application
+            + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":'
+            '"getDataByDataSourceKey","parameters":{"to":'
+            + str(to_p)
+            + ',"agriscopeSessionId":'
+            + str(id_p)
+            + ',"jsonUserParams":"null","datasourceKey":'
+            + str(int(realAgspDatasourceKey))
+            + ',"from":'
+            + str(from_p)
+            + ',"agribaseSerialNumber":'
+            + str(agribaseSn)
+            + "}}"
+        )
+        tmpJson = self.__executeJsonRequest(url, "getDatasourceData()")
+        if len(tmpJson["chart0AtomicResults"]) > 0:
+            return (
+                tmpJson["chart0AtomicResults"][0]["dataDates"],
+                tmpJson["chart0AtomicResults"][0]["dataValues"],
+            )
+        else:
+            return [], []
+
+ 
+
+
+    def get_available_virtual_datasources(self, agribase):
+        json = self.get_available_measure_types(agribase.serialNumber)
+        datasourcesByMeasuretypeDict = dict()
+        if json["dataSources"] is not None:
+            for tmpjson in json["dataSources"]:
+                for tmp2Json in json["dataSources"][tmpjson]:
+                    dataSrc = VirtualDataSource()
+                    # print tmp2Json
+                    dataSrc.loadFromJson(tmp2Json)
+                    if "ALL" not in datasourcesByMeasuretypeDict:
+                        datasourcesByMeasuretypeDict["ALL"] = list()
+                    if dataSrc.measureType not in datasourcesByMeasuretypeDict:
+                        datasourcesByMeasuretypeDict[dataSrc.measureType] = list()
+                    dataSrc.agribase = agribase
+                    datasourcesByMeasuretypeDict["ALL"].append(dataSrc)
+                    datasourcesByMeasuretypeDict[dataSrc.measureType].append(dataSrc)
+        return datasourcesByMeasuretypeDict
+
+    def get_available_measure_types(self, agribaseSn):
+
+        id_p = self.agspSessionId
+        url = (
+            self.server
+            + self.application
+            + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":'
+            '"getAvailableMeasureTypes","parameters":{"agriscopeSessionId":'
+            + str(id_p)
+            + ',"agribaseSerialNumber":'
+            + str(agribaseSn)
+            + "}}"
+        )
+         
+        tmpJson = self.__executeJsonRequest(url, "get_available_measure_types()")
+        return tmpJson
+    
+    def getAgribaseIntervaleInSeconds(self, serialNumber_p):
+        """
+        Return the sampling intervall for an Agribase
+        
+        :param: serialNumber_p: Agriscope serial number
+         
+        
+        :return: A integer, samplin in second
+        """
+        url = (
+            "http://jsonmaint.agriscope.fr/tools/CHECK/agbs.php?sn=%d" % serialNumber_p
+        )
+        json = self.__executeJsonRequest(url)
+        returnv = -1
+        if "intervalInSec" in json:
+            tmp = json["intervalInSec"]
+            if tmp == "N/A":
+                return 15
+            returnv = int(tmp)
+        return returnv
+
+    def __executeJsonRequest(self, url, method=""):
+        try:
+
+            if self.debug == True:
+                logger.debug(url)
+            str_response = ""
+            # RECORD MODE
+            retry = 3
+            i = 0
+            while retry > 0:
+                try:
+                    response = urllib.request.urlopen(url)
+                    retry = -1
+                except Exception as e:
+                    retry = retry - 1
+                    i = i + 1
+                    logger.warn(str(i) + " retry connection ")
+
+            if retry == 0:
+                print("Probleme de connexion pour aller vers " + url)
+                return
+            str_response = response.read().decode("utf-8")
+
+            if self.debug == True:
+                logger.debug(str_response)
+            obj = json.loads(str_response, strict=False)
+            infomessage = "N/A"
+            if "infoMessage" in obj:
+                infomessage = obj["infoMessage"]
+                if "session invalide" in infomessage:
+                    if len(method) > 0:
+                        logger.warn(
+                            u"Numero de session invalide dans l'appel de "
+                            + method
+                            + " par l'api."
+                        )
+                    else:
+                        logger.warn(u"Numero de session invalide  par l'api.")
+                        raise AgspError(u"Erreur de connection")
+            return obj
+        except Exception as e:
+            message = ""
+            if len(method) > 0:
+                message = "Erreur de connection dans " + method
+            else:
+                message = "Erreur de connection "
+            logger.exception(message)
+            raise AgspError(message)
+                
+
     def __convertUnixTimeStamp2PyDate(self, unixtimeStamp):
         """
         Convert a unixtime stamp (provenant du serveur agriscope) en Temps python avec une timezone UTC
@@ -343,71 +482,10 @@ class AgspConnecteur(object):
         # print "%d %s" % (unixtimeStamp, unicode(returnv))
         return returnv
 
-    def getAgribaseIntervaleInSeconds(self, serialNumber_p):
+    def set_debug(self, value):
         """
-        Return the sampling intervall for an Agribase
+        Execution is verbose in debug mode
         
-        :param: serialNumber_p: Agriscope serial number
-         
-        
-        :return: A integer, samplin in second
+        :param value : True ou False
         """
-        url = (
-            "http://jsonmaint.agriscope.fr/tools/CHECK/agbs.php?sn=%d" % serialNumber_p
-        )
-        json = self.__executeJsonRequest(url)
-        returnv = -1
-        if "intervalInSec" in json:
-            tmp = json["intervalInSec"]
-            if tmp == "N/A":
-                return 15
-            returnv = int(tmp)
-        return returnv
-
-    def __executeJsonRequest(self, url, method=""):
-        try:
-
-            if self.debug == True:
-                print(url)
-            str_response = ""
-            # RECORD MODE
-            retry = 3
-            i = 0
-            while retry > 0:
-                try:
-                    response = urllib.request.urlopen(url)
-                    retry = -1
-                except Exception as e:
-                    retry = retry - 1
-                    i = i + 1
-                    print(str(i) + " retry connection ")
-
-            if retry == 0:
-                print("Probleme de connexion pour aller vers " + url)
-                return
-            str_response = response.read().decode("utf-8")
-
-            if self.debug == True:
-                print(str_response)
-            obj = json.loads(str_response, strict=False)
-            infomessage = "N/A"
-            if "infoMessage" in obj:
-                infomessage = obj["infoMessage"]
-                if "session invalide" in infomessage:
-                    if len(method) > 0:
-                        print(
-                            u"Numero de session invalide dans l'appel de "
-                            + method
-                            + " par l'api."
-                        )
-                    else:
-                        print(u"Numero de session invalide  par l'api.")
-                        raise AgspError(u"Erreur de connection")
-            return obj
-        except Exception as e:
-            print(e.__doc__)
-            print(e.message)
-            if len(method) > 0:
-                raise AgspError(u"Erreur de connection dans " + method)
-            else:
-                raise AgspError(u"Erreur de connection ")
+        self.debug = value

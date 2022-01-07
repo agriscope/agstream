@@ -1,7 +1,13 @@
 {
-    "json.schemas": [
-        
-    
+    "json.schemas": [],
+    "python.pythonPath": "C:\\Users\\guill\\Documents\\01-Dev\\00-venvPython\\py36_django3\\Scripts\\python.exe",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "*_test.py"
     ],
-    "python.pythonPath": "C:\\Users\\guill\\Documents\\01-Dev\\00-venvPython\\py36_django3\\Scripts\\python.exe"
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
 }

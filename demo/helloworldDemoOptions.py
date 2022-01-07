@@ -14,21 +14,20 @@ import time
 from agstream.session import AgspSession
 import datetime
 t0 = time.time()
-session = AgspSession()
-session.login(u"gailet", u"gailetventoux", updateAgribaseInfo=True)
+session = AgspSession(server="jsonapi.agriscope.fr")
+session.login(u"sam", u"marsi34", updateAgribaseInfo=True)
+#session.login(u"paul", u"mourot", updateAgribaseInfo=True)
+
 session.describe()
 
 to_p=datetime.datetime.now() 
 from_p = to_p - timedelta(seconds=60*30)
-
-for abs in session.agribases :
-    print (u"****************************************")
-    print (abs)
-    df = session.getAgribaseDataframe(abs,from_p=from_p, to_p=to_p)
-    print (u"Récuperation de %d données" % (df.shape[0] * df.shape[1]))
-    print (df.head())
-    xlsFileName = u"%s.xlsx" % abs.name 
-    print(u"Ecriture des  données dans le fichier %s " % xlsFileName)
+print (u"****************************************")
+print (u"START DATE POUR AGRIBASES SAM")
+print (u"****************************************")
+   
+for abs in  sorted(session.agribases, key=lambda x: x.start, reverse=True) :
+    print (" - %s [%d] %s %s" % (abs.start, abs.serialNumber,abs.agriscopeType, abs.name) )
     #df.to_excel(xlsFileName, engine=u"openpyxl")
 print(u"Fin du programme")
 

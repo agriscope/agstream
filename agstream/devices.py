@@ -74,6 +74,14 @@ class Agribase(object):
             if sensor.agspSensorId == sensor_id :
                 return sensor   
         return None
+    
+    def get_virtual_sensors(self) :
+        returnv = list()
+        for sensor in self.sensors :
+            if sensor.isVirtualDriver == True:
+                returnv.append(sensor)
+        return returnv
+    
     def loadFromJson(self, json):
         """
             Update Agribase informations from the json flow coming from Agriscope API
@@ -146,11 +154,18 @@ class Sensor(object):
     measureType = "?"
     """Measure type sampled by the sensor """
     agspSensorId = 0
-    """ Agriscope internal key of this sensor"""
+    """ Agriscope internal key or datasoure key of this sensor (real or virtual)"""
     modulePosition = 0
     """ Physical module position in the Agribase device"""
     sensorPosition = 0
-    """Physical sensor position within the module """
+    """Is a virtual sensor"""
+    isVirtualDriver = False
+    """serial number of the agribase, needed to retreive data of virtual sensors"""
+    agribase_serial_number = -1
+    
+    sensor_params =""
+    
+    granularity = "SECOND"
     
     unit = "?"
 
@@ -167,7 +182,23 @@ class Sensor(object):
         self.agspSensorId = json["internalId"]
         self.sensorPosition = json['channelPosition']
         self.modulePosition = json['modulePosition']
-
-    def __repr__(self):
-        return ( "%s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))
+        self.sensor_params = json['sensorParams']
+        self.isVirtualDriver = False
+        self.agribase_serial_number = -1
         
+    def load_from_virtual_datasource (self, virtual_datasource) :
+        self.isVirtualDriver = True
+        self.name = virtual_datasource.name
+        self.sensorType = virtual_datasource.type
+        self.measureType = virtual_datasource.measureType
+        self.agspSensorId = virtual_datasource.hashKey
+        self.agribase_serial_number = virtual_datasource.agribaseSerialNumber
+        self.unit = virtual_datasource.unit
+        self.granularity = virtual_datasource.granularity
+        self.sensorPosition = -1
+        self.modulePosition = -1
+    def __repr__(self):
+        if self.isVirtualDriver == False :
+            return ( "%s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))
+        else :
+            return ( "V %s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))

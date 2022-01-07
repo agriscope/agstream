@@ -6,11 +6,13 @@ Created on 7 nov. 2019
 import pandas as pd
 import time
 from agstream.session import AgspSession
+from agstream.session_extended import AgspExtendedSession
 
 
+session = AgspExtendedSession(wanted_virtual_types=['POINT ROSE','HEURES DE FROID','HUMIDE'])
+session.login(u'guillaume2', u'agspguillaume', updateAgribaseInfo=True)
+session.login(u'lebreton', u'jasse34', updateAgribaseInfo=True)
 
-session = AgspSession()
-session.login(u'masnumerique', u'masnumerique', updateAgribaseInfo=True)
 session.describe()
 
 
@@ -19,7 +21,7 @@ for abs in session.agribases :
     print ("")
     print (u"%s (%d) "  %(abs.name,abs.serialNumber))
     for sensor in abs.sensors :
-        print ("    -%s" %sensor.name)
+        print ("    - %s" % sensor)
 print ("")
 for abs in session.agribases :
     print ("**************************")

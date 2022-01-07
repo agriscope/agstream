@@ -32,6 +32,8 @@ for abs in session.agribases :
     print (df.head())
     xlsFileName = u"%s.xlsx" % abs.name 
     print(u"Ecriture des  données dans le fichier %s " % xlsFileName)
+    # suppression des timezone, car excel ne le supporte pas
+    df=session.remove_any_timezone_info(df) 
     df.to_excel(xlsFileName, engine=u"openpyxl")
 
 
