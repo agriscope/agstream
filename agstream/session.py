@@ -48,6 +48,7 @@ class AgspSession(object):
     as an Pandas Dataframe
     
     """
+    status = False
 
     debug = False
     """ debug flag """
