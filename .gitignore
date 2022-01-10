@@ -77,3 +77,7 @@ reinette 17.xlsx
 sandy cot 17.xlsx
 sunny cot or.xlsx
 swired farbela.xlsx
+.coverage
+nose2-junit.xml
+TEST-tests.agstream_extended_session_test.Test_AgspStreamBasic-20220110124210.xml
+TEST-tests.agstream_test.Test_AgspStreamBasic-20220110124210.xml

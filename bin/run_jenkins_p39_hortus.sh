@@ -9,9 +9,11 @@ source /home/tomcat/pyenv/venv_39_django3/bin/activate # Activation de l'environ
 cd agstream
 #python -m unittest discover project_directory "*_test.py"
 
-rm .coverage
-coverage run --source='.' -m unittest discover agstream  "*_test.py" # lancement des test
-coverage xml -o "reports/coverage.xml"  --omit "*test*","*migrations","*/commands*"
-coverage html  --directory reports  --omit="*test*","*migrations","*/commands*"
+
+nosetests  --with-xunit    ` find agstream/tests/ -name "*test*.py" `  --with-coverage --cover-package=agspy
+coverage xml
+coverage html
+
+
 
 deactivate # On sort de l'environnement virtuel
