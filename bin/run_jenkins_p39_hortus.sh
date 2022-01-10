@@ -6,7 +6,6 @@ source /home/tomcat/pyenv/venv_39_django3/bin/activate # Activation de l'environ
 
 
 #pip install -r ./djcan/requirements.txt # Installation des dépendances pour l'application
-cd agstream
 #python -m unittest discover project_directory "*_test.py"
 
 
