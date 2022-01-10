@@ -303,7 +303,7 @@ class AgspSession(object):
         if from_p == None:
             from_p = to_p - timedelta(days=3)
         date, values = self.connector.getSensorData(sensorid,  self._totimestamp(from_p), self._totimestamp(to_p))
-        df = self.__convertDataToPandasFrame(date, values, sensorid)
+        df = self.__convertDataToPandasFrame(date, values, '%d'%sensorid)
         df = self.__check_datagram_interval_limits(df, from_p,to_p)
 
         if df is not None:
@@ -318,7 +318,7 @@ class AgspSession(object):
             from_p = to_p - timedelta(days=3)
         date, values = self.connector.get_virtual_datasource_data( agribase_sn,sensorid,  self._totimestamp(from_p), self._totimestamp(to_p))
    
-        df = self.__convertDataToPandasFrame(date, values, sensorid)
+        df = self.__convertDataToPandasFrame(date, values, '%d'%sensorid)
         df = self.__check_datagram_interval_limits(df, from_p,to_p)
         if df is not None:
             df = df.tz_convert(self.tz)

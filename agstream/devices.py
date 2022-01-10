@@ -153,6 +153,9 @@ class Sensor(object):
     """Type of the sensors"""
     measureType = "?"
     """Measure type sampled by the sensor """
+
+    unit = "?"
+    
     agspSensorId = 0
     """ Agriscope internal key or datasoure key of this sensor (real or virtual)"""
     modulePosition = 0
@@ -167,7 +170,6 @@ class Sensor(object):
     
     granularity = "SECOND"
     
-    unit = "?"
 
     def __init__(self):
         self.name = "?"
@@ -179,6 +181,7 @@ class Sensor(object):
         self.name = json["name"]
         self.sensorType = json["sensorType"]
         self.measureType = json["measureType"]
+        self.unit = json["unit"]
         self.agspSensorId = json["internalId"]
         self.sensorPosition = json['channelPosition']
         self.modulePosition = json['modulePosition']
