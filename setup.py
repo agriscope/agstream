@@ -20,6 +20,11 @@ setup(
     # C'est pour cette raison que l'on a tout mis dans un seul dossier:
     # on peut ainsi utiliser cette fonction facilement
     packages=find_packages(),
+    
+    install_requires=[
+          'pandas',
+          'future',      
+      ],
     # votre pti nom
     author="Agriscope",
     # Votre email, sachant qu'il sera publique visible, avec tous les risques

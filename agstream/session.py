@@ -31,7 +31,7 @@ from agstream.decorators import timeit_info
 import logging
 logger = logging.getLogger(__name__)
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
 """
   Object principal de connection avec les service Agriscoep.
@@ -351,10 +351,10 @@ class AgspSession(object):
             currentFirst = df.index[0]
             currentLast = df.index[len(df) - 1]
             if from_p > currentFirst:
-                df = df[from_p:currentLast]
+                df = df[from_p.astimezone(df.index.tz):currentLast]
 
             if to_p < currentLast:
-                df = df[currentFirst:to_p]
+                df = df[currentFirst:to_p.astimezone(df.index.tz)]
         return df  
     
     def __refreshAgribases(self):
