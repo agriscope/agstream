@@ -10,7 +10,7 @@ cd agstream
 #python -m unittest discover project_directory "*_test.py"
 
 
-nosetests  --with-xunit    ` find agstream/tests/ -name "*test*.py" `  --with-coverage --cover-package=agspy
+nosetests  --with-xunit    ` find agstream/tests/ -name "*test*.py" `  --with-coverage --cover-package=agstream
 coverage xml
 coverage html
 
