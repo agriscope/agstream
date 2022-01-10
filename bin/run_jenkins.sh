@@ -7,12 +7,13 @@ source /home/tomcat/pyenv/py3/bin/activate # Activation de l'environnement virtu
 
 
 #pip install -r ./djcan/requirements.txt # Installation des dépendances pour l'application
-cd agstream
-#python -m unittest discover project_directory "*_test.py"
 
-rm .coverage
-coverage run --source='.' -m unittest discover agstream  "*_test.py" # lancement des test
-coverage xml -o "reports/coverage.xml"  --omit "*test*","*migrations","*/commands*"
-coverage html  --directory reports  --omit="*test*","*migrations","*/commands*"
 
+nosetests  --with-xunit    ` find agstream/tests/ -name "*test*.py" `  --with-coverage --cover-package=agstream
+coverage xml
+coverage html
+
+
+
+deactivate # On sort de l'environnement virtuel
 deactivate # On sort de l'environnement virtuel
