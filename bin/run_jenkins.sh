@@ -16,4 +16,3 @@ coverage html
 
 
 deactivate # On sort de l'environnement virtuel
-deactivate # On sort de l'environnement virtuel
