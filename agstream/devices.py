@@ -204,4 +204,4 @@ class Sensor(object):
         if self.isVirtualDriver == False :
             return ( "%s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))
         else :
-            return ( "V %s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))
+            return ( "V %s(%d) %s, %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType,self.granularity))
