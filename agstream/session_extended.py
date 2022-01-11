@@ -95,6 +95,20 @@ class AgspExtendedSession(AgspSession):
                     abs.sensors.append(tmpSens)
         return status
 
+    def show_virtual_datasource_catalog(self,abs) :
+        print ("")
+        print ('***********************************************************************')
+        print ('CATALOG virtual datasource on  agribase %s' % abs)
+        
+        virtual_datasource_dict = self.connector.get_available_virtual_datasources(abs)
+        print (abs)
+        for key in virtual_datasource_dict :
+            if key is not 'ALL' :
+                print ('')
+                print ("- MeasureType :%s" % key)
+                for virtual_datasource in virtual_datasource_dict[key]:
+                    print ("\t\t - %s"%virtual_datasource)
+
     def find_virtual_datasource(self,virtual_datasource_dict, string):
         returnv = list()
         for datasource in virtual_datasource_dict["ALL"]:
