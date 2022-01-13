@@ -15,6 +15,7 @@ data analysis comming from agricultural field.
   
 What's New
 ===========
+- (2022/01) v2.0.6  : Improve capabilities to select virtual datasources to update
 - (2022/01) v2.0.0  : Add capabilities to get virtual datasources
 - (2021/06) v1.0.4  : Again optimize exception reporting when server is not joinable
 - (2021/06) v1.0.3  : Optimize exception reporting when server is not joinable

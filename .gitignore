@@ -81,3 +81,4 @@ swired farbela.xlsx
 nose2-junit.xml
 TEST-tests.agstream_extended_session_test.Test_AgspStreamBasic-20220110124210.xml
 TEST-tests.agstream_test.Test_AgspStreamBasic-20220110124210.xml
+.vscode/launch.json

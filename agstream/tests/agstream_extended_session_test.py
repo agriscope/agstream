@@ -45,5 +45,26 @@ class Test_AgspStreamBasic(unittest.TestCase):
             if df is not None:
                 print(df.tail())
 
+    def test_update_agribase_info(self):
+        session = AgspExtendedSession(wanted_virtual_types=['POINT ROSE','HEURES DE FROID','HUMIDE'])
+        session.set_debug(True)
+        session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True,showVirtualSensors=[])
+        # abs=session.getAgribaseInfo(2061)
+        abs=session.getAgribase(2061)
+        self.assertFalse(any(sens.measureType=='TEMPERATURE HUMIDE' for sens in abs.sensors))
+        session.updateAgribaseInfo(2061)      
+        self.assertTrue(any(sens.measureType=='TEMPERATURE HUMIDE' for sens in abs.sensors))
+        
+
+    def test_update_agribase_info_on_login(self):
+        session = AgspExtendedSession(wanted_virtual_types=['POINT ROSE','HEURES DE FROID','HUMIDE'])
+        session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True,showVirtualSensors=[])
+        # abs=session.getAgribaseInfo(2061)
+        abs=session.getAgribase(2061)
+        self.assertFalse(any(sens.measureType=='TEMPERATURE HUMIDE' for sens in abs.sensors))
+        session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True,showVirtualSensors=[2061])
+        abs=session.getAgribase(2061)
+        self.assertTrue(any(sens.measureType=='TEMPERATURE HUMIDE' for sens in abs.sensors))
+        
 if __name__ == '__main__':
     unittest.main()

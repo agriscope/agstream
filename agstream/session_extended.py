@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-    
+
     Agriscope Session
     -----------------
     Python object allowing to connect, and download data programmaticaly from the 
@@ -50,8 +50,8 @@ class AgspExtendedSession(AgspSession):
         AgspSession.__init__(self, server, timezoneName, use_ms_resolution)
         if wanted_virtual_types != None :
             self.allowed_virtual_types=wanted_virtual_types
-  
-    def login(self, login_p, password_p, updateAgribaseInfo=False,showInternalsSensors=False):
+
+    def login(self, login_p, password_p, updateAgribaseInfo=False,showInternalsSensors=False,showVirtualSensors=True):
         """
         Login
         =====
@@ -75,25 +75,41 @@ class AgspExtendedSession(AgspSession):
         # wanted_virtual_types = ['SDS011 mt2.5 compensé V1',
         #                    'SDS011 mt10 compensé V1',
         if updateAgribaseInfo == True :
-            for abs in self.agribases :
+            if showVirtualSensors is True:
+                for abs in self.agribases :
                 # recup des VirualDataSource de cette agribase
-                virtual_datasource_dict = self.connector.get_available_virtual_datasources(abs)
-                virtuals_to_add_as_sensor = list()
-                for wanted_virtual_name in self.allowed_virtual_types:
-                    # recherche de la ou des datasource a partir d'un nom
-                    available_virtual_list = self.find_virtual_datasource(virtual_datasource_dict,wanted_virtual_name)
-                    # on doit retourner cibler qu'un seul element dans la liste.
-                    if len(available_virtual_list) == 1 :
-                        virtuals_to_add_as_sensor.append(available_virtual_list[0])
-                    elif len(available_virtual_list) > 2 :
-                        logger.warn("Attention %d > 1 virtual find for %s wanted virual name" % (len(available_virtual_list),wanted_virtual_name))
-                        
-                # Converstion de la datasource en capteur virtuel sur lagribases
-                for to_be_converted_as_sensor in virtuals_to_add_as_sensor :
-                    tmpSens = Sensor()
-                    tmpSens.load_from_virtual_datasource(to_be_converted_as_sensor)
-                    abs.sensors.append(tmpSens)
+                    self.updateAgribaseInfo(abs)
+            elif isinstance(showVirtualSensors,list):
+                if len(showVirtualSensors) >0:
+                    for serial in showVirtualSensors:
+                        self.updateAgribaseInfo(serial)
+
         return status
+
+    def updateAgribaseInfo(self,abs):
+        # recup des VirualDataSource de cette agribase
+        # abs=self.getAgribase_by_serial(abs_serial) 
+        if isinstance(abs,int):
+            abs=self.getAgribase(abs)
+        if abs is not None:
+            virtual_datasource_dict = self.connector.get_available_virtual_datasources(abs)
+            virtuals_to_add_as_sensor = list()
+            for wanted_virtual_name in self.allowed_virtual_types:
+                # recherche de la ou des datasource a partir d'un nom
+                available_virtual_list = self.find_virtual_datasource(virtual_datasource_dict,wanted_virtual_name)
+                # on doit retourner cibler qu'un seul element dans la liste.
+                if len(available_virtual_list) == 1 :
+                    virtuals_to_add_as_sensor.append(available_virtual_list[0])
+                elif len(available_virtual_list) > 2 :
+                    logger.warn("Attention %d > 1 virtual find for %s wanted virual name" % (len(available_virtual_list),wanted_virtual_name))
+                    
+            # Converstion de la datasource en capteur virtuel sur lagribases
+            for to_be_converted_as_sensor in virtuals_to_add_as_sensor :
+                tmpSens = Sensor()
+                tmpSens.load_from_virtual_datasource(to_be_converted_as_sensor)
+                abs.sensors.append(tmpSens)
+            return True
+        return False
 
     def show_virtual_datasource_catalog(self,abs) :
         print ("")
