@@ -10,7 +10,7 @@ from agstream.session_extended import AgspExtendedSession
 
 
 session = AgspExtendedSession(wanted_virtual_types=['POINT ROSE','HEURES DE FROID','HUMIDE'])
-session.login(u'guillaume2', u'agspguillaume', updateAgribaseInfo=True)
+session.login(u'masnumeriqueAgStream', u'masnumeriqueAgStream', updateAgribaseInfo=True)
 
 session.describe()
 
