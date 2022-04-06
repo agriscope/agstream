@@ -50,7 +50,7 @@ class AgspExtendedSession(AgspSession):
         AgspSession.__init__(self, server, timezoneName, use_ms_resolution)
         if wanted_virtual_types != None :
             self.allowed_virtual_types=wanted_virtual_types
-    def login(self, login_p, password_p, updateAgribaseInfo=False,showInternalsSensors=False):
+    def login(self, login_p, password_p, updateAgribaseInfo=False,showInternalsSensors=False,showVirtualSensors=True):
         """
         Login
         =====
