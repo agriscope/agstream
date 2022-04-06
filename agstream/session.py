@@ -77,7 +77,6 @@ class AgspSession(object):
     L'objectif est d'avoir la liste des agribase a jour, en particulier pour la
     date de la derniere activitée
     """
-
     def login(self, login_p, password_p, updateAgribaseInfo=False,showInternalsSensors=False):
         """
         Login
@@ -189,7 +188,8 @@ class AgspSession(object):
         if frame is not None:
             frame = frame.tz_convert(self.tz)
         return frame
-
+    
+    #@profile
     def getAgribaseDataframeDeep(self, agribase_serial_number, from_p=None, to_p=None):
         """
         getAgribaseDataframe
@@ -216,7 +216,7 @@ class AgspSession(object):
         from_p,to_p=self.set_timezone_if_naive(from_p,to_p)
 
         frame = pd.DataFrame()
-        frame.tz_convert(self.tz)
+        frame = frame.tz_convert(self.tz)
 
         if to_p == None:
             to_p = self.tz.localize(datetime.datetime.now())

@@ -49,7 +49,7 @@ from_p = to_p - timedelta(seconds=60*30) # 30 minutes
 for abs in session.agribases :
     print (u"****************************************")
     print (abs)
-    df = session.getAgribaseDataframe(abs,index_by_sensor_id = False)
+    df = session.getAgribaseDataframe(abs,index_by_sensor_id = False,from_p=from_p, to_p=to_p)
     print (u"Récuperation de %d données" % (df.shape[0] * df.shape[1]))
     print (df.head())
 

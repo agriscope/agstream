@@ -50,7 +50,6 @@ class AgspExtendedSession(AgspSession):
         AgspSession.__init__(self, server, timezoneName, use_ms_resolution)
         if wanted_virtual_types != None :
             self.allowed_virtual_types=wanted_virtual_types
-  
     def login(self, login_p, password_p, updateAgribaseInfo=False,showInternalsSensors=False):
         """
         Login
@@ -103,7 +102,7 @@ class AgspExtendedSession(AgspSession):
         virtual_datasource_dict = self.connector.get_available_virtual_datasources(abs)
         print (abs)
         for key in virtual_datasource_dict :
-            if key is not 'ALL' :
+            if key != 'ALL' :
                 print ('')
                 print ("- MeasureType :%s" % key)
                 for virtual_datasource in virtual_datasource_dict[key]:
