@@ -10,7 +10,7 @@ import agstream
 # et il comporte beaucoup de paramètres
 setup(
     # le nom de votre bibliothèque, tel qu'il apparaitre sur pypi
-    name="agstream", 
+    name="agstream",
     # la version du code
     version=agstream.__version__,
     # Liste les packages à insérer dans la distribution
@@ -20,11 +20,10 @@ setup(
     # C'est pour cette raison que l'on a tout mis dans un seul dossier:
     # on peut ainsi utiliser cette fonction facilement
     packages=find_packages(),
-    
     install_requires=[
-          'pandas',
-          'future',      
-      ],
+        "pandas",
+        "future",
+    ],
     # votre pti nom
     author="Agriscope",
     # Votre email, sachant qu'il sera publique visible, avec tous les risques
@@ -35,7 +34,6 @@ setup(
     # Une description longue, sera affichée pour présenter la lib
     # Généralement on dump le README ici
     long_description_content_type="text/markdown",
-
     long_description=open("README.md").read(),
     # Vous pouvez rajouter une liste de dépendances pour votre lib
     # et même préciser une version . A l'installation, Python essayera de

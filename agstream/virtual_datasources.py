@@ -1,4 +1,3 @@
-
 """"
 # Represent a datasource viruelle disponible pour une agribase
 # Contient l'identifiant unique de la datasource, avec des information complemtaires (agribase, type, unité) 
@@ -117,5 +116,4 @@ class VirtualDataSource(object):
             userParams,
         )
         return string
-        # return (self.name+u'('+unicode(self.hashKey)+u')'+ u" " +self.agribaseName +u'('+unicode(self.agribaseSerialNumber)+u') ' + self.measureType + u" " + self.unit + userParams)
-
+        # return (self.name+u'('+unicode(self.hashKey)+u')'+ " " +self.agribaseName +u'('+unicode(self.agribaseSerialNumber)+u') ' + self.measureType + " " + self.unit + userParams)

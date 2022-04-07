@@ -49,14 +49,14 @@ code :
 
 	from agstream.session import AgspSession
 	session = AgspSession()
-	session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
+	session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)
 	session.describe()
 	for abs in session.agribases :
-	    print (u"****************************************")
+	    print ("****************************************")
 	    print (abs)
 	    df = session.getAgribaseDataframe(abs)
 	    print (df.tail())
-    print(u"Fin du programme")
+    print("Fin du programme")
 
 Output :
 
@@ -89,14 +89,14 @@ Code for UTC:
 
 	from agstream.session import AgspSession
 	session = AgspSession(timezoneName='UTC')
-	session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
+	session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)
 	session.describe()
 	for abs in session.agribases :
-	    print (u"****************************************")
+	    print ("****************************************")
 	    print (abs)
 	    df = session.getAgribaseDataframe(abs)
 	    print (df.tail())
-    print(u"Fin du programme")
+    print("Fin du programme")
 
 Output :
 

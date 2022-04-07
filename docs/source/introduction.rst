@@ -26,7 +26,7 @@ Voic du code ::
         df = session.getAgribaseDataframe(abs)
         print df.tail()
         xlsFileName = "%s.xlsx" % abs.name 
-        print u"Ecriture des données %s " % xlsFileName
+        print "Ecriture des données %s " % xlsFileName
         df.to_excel(xlsFileName,engine='openpyxl')
         
     print u'Fin du programme'

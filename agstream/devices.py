@@ -30,15 +30,15 @@ import pytz
 class Agribase(object):
     """
     Class implementing necessary information for an Agribase
- 
+
     It hold stuff like name, serialNumber, GPS coordinates, lastActivity
-    
+
     It contains sensors list.
-    
+
     .. note::
- 
+
         Objects are build from the json stream comming from the agriscope server
-    
+
     """
 
     name = "?"
@@ -69,22 +69,22 @@ class Agribase(object):
         """
         return self.sensors
 
-    def getSensorByAgspSensorId(self,sensor_id):
-        for sensor in self.sensors :
-            if sensor.agspSensorId == sensor_id :
-                return sensor   
+    def getSensorByAgspSensorId(self, sensor_id):
+        for sensor in self.sensors:
+            if sensor.agspSensorId == sensor_id:
+                return sensor
         return None
-    
-    def get_virtual_sensors(self) :
+
+    def get_virtual_sensors(self):
         returnv = list()
-        for sensor in self.sensors :
+        for sensor in self.sensors:
             if sensor.isVirtualDriver == True:
                 returnv.append(sensor)
         return returnv
-    
+
     def loadFromJson(self, json):
         """
-            Update Agribase informations from the json flow coming from Agriscope API
+        Update Agribase informations from the json flow coming from Agriscope API
         """
         self.name = json["name"]
         self.lat = json["latitude"]
@@ -98,29 +98,29 @@ class Agribase(object):
         self.start = self.utctz.localize(
             datetime.datetime.utcfromtimestamp(old_div(json["startupDate"], 1000))
         )
-        if u"samplingMinute" in json:
-            self.intervalInSeconds = json[u"samplingMinute"]
+        if "samplingMinute" in json:
+            self.intervalInSeconds = json["samplingMinute"]
         else:
             self.intervalInSeconds = -1
-        if u"agriscopeType" in json:
-            self.agriscopeType = json[u"agriscopeType"]
+        if "agriscopeType" in json:
+            self.agriscopeType = json["agriscopeType"]
         else:
-            self.agriscopeType = u"NaN"
+            self.agriscopeType = "NaN"
 
-        if u"linkType" in json:
-            self.linkType = json[u"linkType"]
+        if "linkType" in json:
+            self.linkType = json["linkType"]
         else:
-            self.linkType = u"Nan"
+            self.linkType = "Nan"
 
         self.sensors = list()
 
-        for tmpJson in json[u"sensors"]:
+        for tmpJson in json["sensors"]:
             tmpSens = Sensor()
             tmpSens.loadFromJson(tmpJson)
             self.sensors.append(tmpSens)
 
     def __repr__(self):
-        returnv = u"%s(%d) %s %s containing %d sensors" % (
+        returnv = "%s(%d) %s %s containing %d sensors" % (
             self.name,
             self.serialNumber,
             self.agriscopeType,
@@ -128,8 +128,6 @@ class Agribase(object):
             len(self.sensors),
         )
         return returnv
-
-    
 
 
 """
@@ -140,11 +138,11 @@ class Agribase(object):
 class Sensor(object):
     """
     Class implementing necessary information for an single sensor
- 
+
     Contains information like name, sensorType, measuretype and internal agriscope
     key needed to get data by the Agriscope API
-   
-    
+
+
     """
 
     name = "?"
@@ -155,7 +153,7 @@ class Sensor(object):
     """Measure type sampled by the sensor """
 
     unit = "?"
-    
+
     agspSensorId = 0
     """ Agriscope internal key or datasoure key of this sensor (real or virtual)"""
     modulePosition = 0
@@ -165,31 +163,30 @@ class Sensor(object):
     isVirtualDriver = False
     """serial number of the agribase, needed to retreive data of virtual sensors"""
     agribase_serial_number = -1
-    
-    sensor_params =""
-    
+
+    sensor_params = ""
+
     granularity = "SECOND"
-    
 
     def __init__(self):
         self.name = "?"
 
     def loadFromJson(self, json):
         """
-            Update Sensor informations from the json flow coming from Sensor API
+        Update Sensor informations from the json flow coming from Sensor API
         """
         self.name = json["name"]
         self.sensorType = json["sensorType"]
         self.measureType = json["measureType"]
         self.unit = json["unit"]
         self.agspSensorId = json["internalId"]
-        self.sensorPosition = json['channelPosition']
-        self.modulePosition = json['modulePosition']
-        self.sensor_params = json['sensorParams']
+        self.sensorPosition = json["channelPosition"]
+        self.modulePosition = json["modulePosition"]
+        self.sensor_params = json["sensorParams"]
         self.isVirtualDriver = False
         self.agribase_serial_number = -1
-        
-    def load_from_virtual_datasource (self, virtual_datasource) :
+
+    def load_from_virtual_datasource(self, virtual_datasource):
         self.isVirtualDriver = True
         self.name = virtual_datasource.name
         self.sensorType = virtual_datasource.type
@@ -200,8 +197,20 @@ class Sensor(object):
         self.granularity = virtual_datasource.granularity
         self.sensorPosition = -1
         self.modulePosition = -1
+
     def __repr__(self):
-        if self.isVirtualDriver == False :
-            return ( "%s(%d) %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType))
-        else :
-            return ( "V %s(%d) %s, %s, %s" % (self.name,self.agspSensorId,self.sensorType, self.measureType,self.granularity))
+        if self.isVirtualDriver == False:
+            return "%s(%d) %s, %s" % (
+                self.name,
+                self.agspSensorId,
+                self.sensorType,
+                self.measureType,
+            )
+        else:
+            return "V %s(%d) %s, %s, %s" % (
+                self.name,
+                self.agspSensorId,
+                self.sensorType,
+                self.measureType,
+                self.granularity,
+            )

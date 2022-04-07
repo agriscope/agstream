@@ -30,30 +30,31 @@ import datetime
 import pytz
 from agstream.virtual_datasources import VirtualDataSource
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 class AgspError(Exception):
 
-    """ tp rùzepùrez;s!;cd4mlksdfmlsdfksmdflk
-    
-        Parameter
-        ~~~~~~~~~
-        
-        Raw connecteur to the agriscope API
-        -----------------------------------
-        Class grouping necessary functions to talk with the agriscope server.
-        It allows to be authentification and to get information on a specific account.
-        
-        Possibility to get the agribase's list
-        
-        Posibility to downloads data for each sensor
-    
+    """tp rùzepùrez;s!;cd4mlksdfmlsdfksmdflk
+
+    Parameter
+    ~~~~~~~~~
+
+    Raw connecteur to the agriscope API
+    -----------------------------------
+    Class grouping necessary functions to talk with the agriscope server.
+    It allows to be authentification and to get information on a specific account.
+
+    Possibility to get the agribase's list
+
+    Posibility to downloads data for each sensor
+
     """
 
     def __init__(self, value):
         self.value = value
 
-   
     def __repr__(self):
         return repr(self.value)
 
@@ -61,33 +62,31 @@ class AgspError(Exception):
 class AgspConnecteur(object):
     """
     Raw connector to the Agriscope web service
-    
-    Handle the agriscope session id, store it and use it when calls to 
+
+    Handle the agriscope session id, store it and use it when calls to
     agriscope api json web service
     """
 
     debug = True
 
-    def __init__(self, server=u"jsonapi.agriscope.fr"):
+    def __init__(self, server="jsonapi.agriscope.fr"):
         self.sessionOpen = False
         self.agspSessionId = 0
-        self.server = u"http://" + server
-        self.application = u"/agriscope-web/app"
+        self.server = "http://" + server
+        self.application = "/agriscope-web/app"
         self.lastLogin = "undefined"
         self.lastPassword = "undefined"
         self.debug = False
 
-
-
     def login(self, login_p, password_p):
         """
         Allow to be authentificate in the agriscope server
-        The authentification key (sessionId) received from the server is stored 
+        The authentification key (sessionId) received from the server is stored
         in the AgspConneteur object
         :param login_p: User's login
         :param password_p : User's password
-        
-        :return: The authenfication status and the session id 
+
+        :return: The authenfication status and the session id
         """
         self.lastLogin = login_p
         self.lastPassword = password_p
@@ -101,10 +100,10 @@ class AgspConnecteur(object):
             + '"}}'
         )
         obj = self.__executeJsonRequest(url, "login()")
-        if obj == None :
+        if obj == None:
             logger.error("Failed to get an answer from server " + self.server)
             self.sessionOpen = False
-            self.agspSessionId = -1            
+            self.agspSessionId = -1
         elif obj["returnStatus"] != "RETURN_STATUS_OK":
             logger.error("Failed to open the agriscope session for login " + login_p)
             logger.error(obj["infoMessage"])
@@ -124,18 +123,18 @@ class AgspConnecteur(object):
         """
         Return a raw dictionnary as received from the server
         By default the API is called with stored sessionId
-        
+
         If a optionnal sessionId is specified, the function uses this one.
-        
-        :param: sessionid_p: sessionId 
-        :param: showInternalSensors: shown internal sensors as Dbm,Rssi Sensors 
-        
+
+        :param: sessionid_p: sessionId
+        :param: showInternalSensors: shown internal sensors as Dbm,Rssi Sensors
+
         :return: A raw dict as received from the server
         :rtype: dict
         """
-        paramShowInternalSensors="false"
-        if showInternalSensors == True :
-            paramShowInternalSensors="true"
+        paramShowInternalSensors = "false"
+        if showInternalSensors == True:
+            paramShowInternalSensors = "true"
         if sessionid_p == -1:
             sessionid_p = self.agspSessionId
 
@@ -144,30 +143,31 @@ class AgspConnecteur(object):
             + self.application
             + '?service=jsonRestWebservice&arguments={"jsonWsVersion":"1.0","method":"getAgribases","parameters":{"agriscopeSessionId":'
             + str(sessionid_p)
-            +',"internalSensors":' + paramShowInternalSensors
+            + ',"internalSensors":'
+            + paramShowInternalSensors
             + "}}"
         )
         return self.__executeJsonRequest(url, "getAgribases()")
 
     def getAgribaseAllSensorsData(self, agribaseSn, from_p=None, to_p=None):
         """
-        Return a map [sensorId,(array of data and date )] containing 
+        Return a map [sensorId,(array of data and date )] containing
         the data of all the sensor of thus agribase.
 
         Use the period specified by the from_p and the to_p parameters.
-        
+
         If from_p AND to_p is not specified, the period is choosen automatically from
         [now - 3 days => now]
-        
-        If from_p is not specified and to_p is specified, the function return a range 
+
+        If from_p is not specified and to_p is specified, the function return a range
         between [to_p - 3 days => to_p]
-        
-        
+
+
         :param: agribaseSn: Agriscope serial number
-        :param: from_p : Datetime 
-        :param: to_p : Datetime 
-         
-        
+        :param: from_p : Datetime
+        :param: to_p : Datetime
+
+
         :return: A map of [sensorid,tuble of two array (datesArray[], valuesArray[])]
         """
         id_p = self.agspSessionId
@@ -192,8 +192,8 @@ class AgspConnecteur(object):
         returnv = dict()
         # Si il y a un probleme avec la connection au serveur, tmpJson est None
         # alors on sort
-        if tmpJson is None :
-            return returnv;
+        if tmpJson is None:
+            return returnv
 
         # print "      "
         # print "      "
@@ -201,7 +201,7 @@ class AgspConnecteur(object):
         now = datetime.datetime.now()
 
         # "returnStatus" : "RETURN_STATUS_OK",
-          #   "infoMessage" : "Sortie de getAllSensorTimeSeriesMapByAgribase() Récupération de 609 donnees l'agribase #1012, user login laty.",
+        #   "infoMessage" : "Sortie de getAllSensorTimeSeriesMapByAgribase() Récupération de 609 donnees l'agribase #1012, user login laty.",
         # "personalKey" : "DUMMY-parcelle 09 plant JULIEN (Le borniquet)",
         # "measureType" : "",
         # "agribaseSerialNumber" : 1012,
@@ -223,15 +223,18 @@ class AgspConnecteur(object):
         #   "dataValues" : [ 11.7, 11.4, 11.5, 11.7, 11.8, 11.8, 11.2, 11.2, 10.6, 10.4, 10.6, 10.7, 10.8, 10.5, 10.3, 10.2, 10.2, 10.5, 10.9, 10.3, 9.6, 9.7, 9.9, 10.0, 11.0, 11.8, 12.3, 12.9, 13.4, 14.0, 14.7, 15.6, 16.3, 17.0, 17.4, 17.9, 18.6, 19.1, 19.6, 20.4, 20.8, 20.7, 21.2, 21.1, 21.4, 21.6, 22.1, 21.5, 21.8, 21.7, 22.3, 22.6, 22.6, 22.8, 22.9, 23.1, 22.9, 23.4, 22.9, 24.1, 23.6, 22.8, 24.0, 23.4, 23.0, 23.9, 23.7, 23.2, 22.9, 23.0, 23.6, 23.2, 22.3, 22.5, 22.7, 22.3, 21.6, 20.5, 19.7, 18.9, 18.1, 17.1, 16.4, 16.0, 15.6, 15.6, 15.3 ]
         # }, {
         #       "returnStatus" : "RETURN_STATUS_OK",
-         #   "   infoMessage" : "",
+        #   "   infoMessage" : "",
         #   "personalKey" : "undefined",
         #   "origin" : "parcelle 09 plant JULIEN (Le borniquet)/girouette",
         t1 = time.time()
 
-        for atomic_results in tmpJson["atomicResults"] :
+        for atomic_results in tmpJson["atomicResults"]:
             atomic_nb_data = atomic_results["dataCount"]
             atomic_sensor_id = atomic_results["sensorInternalId"]
-            atomic_data_tuple = (atomic_results["dataDates"],atomic_results["dataValues"])
+            atomic_data_tuple = (
+                atomic_results["dataDates"],
+                atomic_results["dataValues"],
+            )
             nbData = nbData + atomic_nb_data
             returnv[atomic_sensor_id] = atomic_data_tuple
         deltams = (t1 - t0) * 1000
@@ -247,23 +250,23 @@ class AgspConnecteur(object):
     def getSensorData(self, sensorId, from_p=None, to_p=None):
         """
         Return timeseries as an array of data and date from the the sensor id.
-        
-        In 
-        
+
+        In
+
         Use the period specified by the from_p and the to_p parameters.
-        
+
         If from_p AND to_p is not specified, the period is choosen automatically from
         [now - 3 days => now]
-        
-        If from_p is not specified and to_p is specified, the function return a range 
+
+        If from_p is not specified and to_p is specified, the function return a range
         between [to_p - 3 days => to_p]
-        
-        
+
+
         :param: sensorId: Agriscope sensor id
-        :param: from_p : Datetime 
-        :param: to_p : Datetime 
-         
-        
+        :param: from_p : Datetime
+        :param: to_p : Datetime
+
+
         :return: A tuble of two array (datesArray[], valuesArray[])
         """
         id_p = self.agspSessionId
@@ -305,8 +308,9 @@ class AgspConnecteur(object):
             tmpJson["atomicResults"][0]["dataValues"],
         )
 
-
-    def get_virtual_datasource_data(self, agribaseSn, datasourceHashKey, from_p=None, to_p=None, id_p=-1):
+    def get_virtual_datasource_data(
+        self, agribaseSn, datasourceHashKey, from_p=None, to_p=None, id_p=-1
+    ):
         id_p = self.agspSessionId
         from_p = int(from_p * 1000)
         to_p = int(to_p * 1000)
@@ -316,7 +320,6 @@ class AgspConnecteur(object):
         realAgspDatasourceKey = datasourceHashKey / agribaseSn
         # print "getjson abs=%d key=%d , realkey = %d" % (datasourceHashKey, agribaseSn,realAgspDatasourceKey )
 
-      
         url = (
             self.server
             + self.application
@@ -341,9 +344,6 @@ class AgspConnecteur(object):
             )
         else:
             return [], []
-
- 
-
 
     def get_available_virtual_datasources(self, agribase):
         json = self.get_available_measure_types(agribase.serialNumber)
@@ -376,17 +376,17 @@ class AgspConnecteur(object):
             + str(agribaseSn)
             + "}}"
         )
-         
+
         tmpJson = self.__executeJsonRequest(url, "get_available_measure_types()")
         return tmpJson
-    
+
     def getAgribaseIntervaleInSeconds(self, serialNumber_p):
         """
         Return the sampling intervall for an Agribase
-        
+
         :param: serialNumber_p: Agriscope serial number
-         
-        
+
+
         :return: A integer, samplin in second
         """
         url = (
@@ -433,13 +433,13 @@ class AgspConnecteur(object):
                 if "session invalide" in infomessage:
                     if len(method) > 0:
                         logger.warning(
-                            u"Numero de session invalide dans l'appel de "
+                            "Numero de session invalide dans l'appel de "
                             + method
                             + " par l'api."
                         )
                     else:
-                        logger.warning(u"Numero de session invalide  par l'api.")
-                        raise AgspError(u"Erreur de connection")
+                        logger.warning("Numero de session invalide  par l'api.")
+                        raise AgspError("Erreur de connection")
             return obj
         except Exception as e:
             message = ""
@@ -449,7 +449,6 @@ class AgspConnecteur(object):
                 message = "Erreur de connection "
             logger.exception(message)
             raise AgspError(message)
-                
 
     def __convertUnixTimeStamp2PyDate(self, unixtimeStamp):
         """
@@ -485,7 +484,7 @@ class AgspConnecteur(object):
     def set_debug(self, value):
         """
         Execution is verbose in debug mode
-        
+
         :param value : True ou False
         """
         self.debug = value

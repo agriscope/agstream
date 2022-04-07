@@ -11,34 +11,33 @@ log into the agriscope server + retreive data from agribases.
 @author: guillaume
 """
 import datetime
-from datetime import timedelta 
+from datetime import timedelta
 import time
 from agstream.session import AgspSession
+
 t0 = time.time()
 session = AgspSession()
-session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
+session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)
 session.describe()
-print ("")
-print ("**************************************************")
-print ("* Example 1 :  simplest way to get data")
-print ("* get the data, and feed an xlsfile")
-print ("**************************************************")
+print("")
+print("**************************************************")
+print("* Example 1 :  simplest way to get data")
+print("* get the data, and feed an xlsfile")
+print("**************************************************")
 
-for abs in session.agribases :
-    print (u"****************************************")
-    print (abs)
+for abs in session.agribases:
+    print("****************************************")
+    print(abs)
     df = session.getAgribaseDataframe(abs)
     for sensor in abs.sensors:
-        print(u"%s %s" % (abs.name, sensor.name))
+        print("%s %s" % (abs.name, sensor.name))
         df = session.getSensorDataframe(sensor)
         if df is not None:
             print(df.tail())
-    
 
-print(u"Fin du programme")
+
+print("Fin du programme")
 
 t1 = time.time()
 deltams = (t1 - t0) * 1000
-print(u"Fin du z programme: duree %00d ms" % deltams )
-
-
+print("Fin du z programme: duree %00d ms" % deltams)
