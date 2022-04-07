@@ -84,3 +84,43 @@ Output :
 	2021-03-31 12:07:20+02:00                   0.0             0.0            3.301
 	Ecriture des  données dans le fichier Debitmetre Grenache Rang 10.xlsx	
 
+Code for UTC:
+
+	from agstream.session import AgspSession
+	session = AgspSession(timezoneName='UTC')
+	session.login(u"masnumeriqueAgStream", u"1AgStream", updateAgribaseInfo=True)
+	session.describe()
+	for abs in session.agribases :
+	    print (u"****************************************")
+	    print (abs)
+	    df = session.getAgribaseDataframe(abs)
+	    print (df.tail())
+    print(u"Fin du programme")
+
+Output :
+
+	**************************************************
+	* Example 1 :  simplest way to get data
+	* get the data, and feed an xlsfile
+	**************************************************
+	****************************************
+	Compteur Mourvedre Rang 9(2301) AGRIBASE3S_STC SIGFOX containing 3 sensors
+	Récuperation de 864 données
+							compteur d'eau  alimentation #4  humectation foliaire
+	2021-03-28 12:18:28+00:00             0.0            3.312                   0.0
+	2021-03-28 12:33:29+00:00             0.0            3.316                   0.0
+	2021-03-28 12:48:29+00:00             0.0            3.318                   0.0
+	2021-03-28 13:03:29+00:00             0.0            3.314                   0.0
+	2021-03-28 13:18:29+00:00             0.0            3.310                   0.0
+	Ecriture des  données dans le fichier Compteur Mourvedre Rang 9.xlsx
+	****************************************
+	Debitmetre Grenache Rang 10(2299) AGRIBASE3S_STC SIGFOX containing 3 sensors
+	Récuperation de 39 données
+							humectation foliaire  compteur d'eau  alimentation #4
+	2021-03-31 09:07:31+00:00                   0.0             0.0            0.000
+	2021-03-31 09:22:20+00:00                   0.0             0.0            3.298
+	2021-03-31 09:37:20+00:00                   0.0             0.0            3.299
+	2021-03-31 09:52:20+00:00                   0.0             0.0            3.298
+	2021-03-31 10:07:20+00:00                   0.0             0.0            3.301
+	Ecriture des  données dans le fichier Debitmetre Grenache Rang 10.xlsx	
+

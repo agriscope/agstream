@@ -100,7 +100,7 @@ class AgspExtendedSession(AgspSession):
                 if len(available_virtual_list) == 1 :
                     virtuals_to_add_as_sensor.append(available_virtual_list[0])
                 elif len(available_virtual_list) > 2 :
-                    logger.warn("Attention %d > 1 virtual find for %s wanted virual name" % (len(available_virtual_list),wanted_virtual_name))
+                    logger.warning("Attention %d > 1 virtual find for %s wanted virtual name" % (len(available_virtual_list),wanted_virtual_name))
                     
             # Converstion de la datasource en capteur virtuel sur lagribases
             for to_be_converted_as_sensor in virtuals_to_add_as_sensor :
@@ -151,7 +151,7 @@ class AgspExtendedSession(AgspSession):
         # On l'appelle directement, et on obtient toutes les donnees des capteurs reels.
         #
         # Dans un second temps, on va chercher un a un les données des capteur virtuels         
-        from_p,to_p=super().set_timezone_if_naive(from_p,to_p)
+        from_p,to_p=super().set_date_default_and_timezone_if_naive(from_p,to_p)
 
         df = super().getAgribaseDataframe(agribase_p,from_p,to_p,index_by_sensor_id)
 

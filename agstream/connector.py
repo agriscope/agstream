@@ -417,7 +417,7 @@ class AgspConnecteur(object):
                 except Exception as e:
                     retry = retry - 1
                     i = i + 1
-                    logger.warn(str(i) + " retry connection ")
+                    logger.warning(str(i) + " retry connection ")
 
             if retry == 0:
                 print("Probleme de connexion pour aller vers " + url)
@@ -432,13 +432,13 @@ class AgspConnecteur(object):
                 infomessage = obj["infoMessage"]
                 if "session invalide" in infomessage:
                     if len(method) > 0:
-                        logger.warn(
+                        logger.warning(
                             u"Numero de session invalide dans l'appel de "
                             + method
                             + " par l'api."
                         )
                     else:
-                        logger.warn(u"Numero de session invalide  par l'api.")
+                        logger.warning(u"Numero de session invalide  par l'api.")
                         raise AgspError(u"Erreur de connection")
             return obj
         except Exception as e:
