@@ -233,7 +233,7 @@ class AgspSession(object):
             # La dataframe n'est pas dans les bornes demandées, ou contient des valeurs Nan
             # Il se peut que ce soit un erreur transitoire de l'API
             # FOrce un retry
-            logger(
+            logger.warn(
                 "!! retry api getAgribaseDataframeReal(%d, %s, %s)"
                 % (agribase_serial_number, from_p, to_p)
             )
@@ -323,7 +323,7 @@ class AgspSession(object):
             # La dataframe n'est pas dans les bornes demandées, ou contient des valeurs Nan
             # Il se peut que ce soit un erreur transitoire de l'API
             # FOrce un retry
-            logger(
+            logger.warn(
                 "!! retry api getSensorDataframeReal(%d,%s, %s, %s)"
                 % (sensorid, sensor_name, from_p, to_p)
             )
@@ -358,7 +358,7 @@ class AgspSession(object):
             # La dataframe n'est pas dans les bornes demandées, ou contient des valeurs Nan
             # Il se peut que ce soit un erreur transitoire de l'API
             # FOrce un retry
-            logger(
+            logger.warn(
                 "!! retry api getVirtualSensorDataframeReal(%d,%d, %s, %s)"
                 % (sensorid, agribase_sn, from_p, to_p)
             )
