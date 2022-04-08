@@ -15,6 +15,7 @@ data analysis comming from agricultural field.
   
 What's New
 ===========
+- (2022/01) v2.0.8  : Bug correction in logger
 - (2022/01) v2.0.7  : Add a retry API when something wrong seems to be there
 - (2022/01) v2.0.6  : Improve capabilities to select virtual datasources to update
 - (2022/01) v2.0.0  : Add capabilities to get virtual datasources
