@@ -72,7 +72,7 @@ class AgspConnecteur(object):
     def __init__(self, server="jsonapi.agriscope.fr"):
         self.sessionOpen = False
         self.agspSessionId = 0
-        self.server = "http://" + server
+        self.server = "https://" + server
         self.application = "/agriscope-web/app"
         self.lastLogin = "undefined"
         self.lastPassword = "undefined"
@@ -425,6 +425,7 @@ class AgspConnecteur(object):
             str_response = response.read().decode("utf-8")
 
             if self.debug == True:
+                #print (str_response)
                 logger.debug(str_response)
             obj = json.loads(str_response, strict=False)
             infomessage = "N/A"
