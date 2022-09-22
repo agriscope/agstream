@@ -10,7 +10,6 @@
 
 @author: renaud
 """
-from __future__ import print_function
 from __future__ import division
 
 from builtins import str
@@ -122,7 +121,7 @@ class AgspSession(object):
                 self.__refreshAgribases()
         if self.debug == True:
             if status == True:
-                logger.info(login_p + " logging OK.")
+                logger.debug(login_p + " logging OK.")
 
             else:
                 logger.error("Erreur de connection pour " + login_p + ".")
@@ -191,9 +190,14 @@ class AgspSession(object):
 
         if index_by_sensor_id == False:  # so index with sensor name
             renaming_dict = dict()
+            
             for col in frame.columns:
                 sensor = agribase_p.getSensorByAgspSensorId(int(col))
-                renaming_dict[col] = sensor.name
+                # bug lors du dev agharvester, capteur fantome
+                col_name = "UNKNOW_%s" % col
+                if sensor is not None :
+                    col_name = sensor.name
+                renaming_dict[col] = col_name
             frame.rename(columns=renaming_dict, inplace=True)
 
         if frame is not None:

@@ -6,7 +6,9 @@ Created on 7 nov. 2019
 import pandas as pd
 import time
 from agstream.session import AgspSession
-
+import os
+if not os.path.exists('./test_outputs/'):
+    os.makedirs('./test_outputs/')
 
 session = AgspSession()
 session.login("masnumerique", "masnumerique", updateAgribaseInfo=True)

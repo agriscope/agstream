@@ -61,7 +61,8 @@ class VirtualDataSource(object):
                     if pattern in self.getSmallName():
                         return True
         return False
-
+    
+    
     def getSmallName(self):
         # Retoure un nom de type <agribaseNameSansAccentEspace>_<numeroserie>_<minucule measureType>_sensorNameTronque
         tmpName = self.agribaseName.replace(" ", "").lower()
@@ -104,8 +105,6 @@ class VirtualDataSource(object):
                     userParams + param + " = " + str(self.userParameters[param]) + ";"
                 )
 
-            # print userParams
-            # user
         string = "%-42s %-11s %-22s %-10d %-18s  %-5s %-s" % (
             self.name,
             str(self.hashKey),

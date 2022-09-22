@@ -14,7 +14,10 @@ import datetime
 from datetime import timedelta
 import time
 from agstream.session import AgspSession
-
+import os
+if not os.path.exists('./test_outputs/'):
+    os.makedirs('./test_outputs/')
+    
 t0 = time.time()
 session = AgspSession()
 session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)

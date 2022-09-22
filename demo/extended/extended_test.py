@@ -3,14 +3,14 @@ Created on 7 nov. 2019
 
 @author: guill
 """
-import pandas as pd
-import time
-from agstream.session import AgspSession
 from agstream.session_extended import AgspExtendedSession
 
-
-session = AgspExtendedSession(
-    wanted_virtual_types=["POINT ROSE", "HEURES DE FROID", "HUMIDE"]
+import os
+if not os.path.exists('./test_outputs/'):
+    os.makedirs('./test_outputs/')
+session = AgspExtendedSession( 
+      wanted_virtual_types=["POINT ROSE", "HEURES DE FROID", "HUMIDE","DPV"],
+      excluded_virtual_types_pattern=["HEURE"]
 )
 session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)
 

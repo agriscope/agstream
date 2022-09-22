@@ -47,18 +47,11 @@ def timeit_info(method):
         )
 
         logger.info(indent + "[START] %s" % (fc_name))
-        # print(indent + "[START] %s" % (fc_name))
         tab_count_info[0] += 1
         result = method(*args, **kw)
         tab_count_info[0] -= 1
         te = time.time()
         logger.info(indent + "[ END ] [%7.1fms] %s" % ((te - ts) * 1000, fc_name))
-        # print(indent + "[ END ] [%7.1fms] %s" % ((te - ts) * 1000, fc_name))
-
-        # if len(args) <=1 or type(args[1]) == pandas.core.frame.DataFrame:
-        #     logger.info(indent+"[ END ] [%7.1fms] %s()" % ((te - ts) * 1000,method.__qualname__))
-        # else :
-        #     logger.info(indent+"[ END ] [%7.1fms] %s(%s)" % ((te - ts) * 1000,method.__qualname__,args[1]))
         return result
 
     return timed

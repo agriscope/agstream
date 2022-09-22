@@ -47,6 +47,8 @@ class AgspExtendedSession(AgspSession):
         "TEMPERATURE HUMIDE",
         "point de rosée",
     ]
+    excluded_virtual_types_pattern = []
+    
 
     def __init__(
         self,
@@ -54,10 +56,13 @@ class AgspExtendedSession(AgspSession):
         timezoneName="Europe/Paris",
         use_ms_resolution=False,
         wanted_virtual_types=None,
+        excluded_virtual_types_pattern=None
     ):
         AgspSession.__init__(self, server, timezoneName, use_ms_resolution)
         if wanted_virtual_types != None:
             self.allowed_virtual_types = wanted_virtual_types
+        if excluded_virtual_types_pattern != None:
+            self.excluded_virtual_types_pattern = excluded_virtual_types_pattern
 
     def login(
         self,
@@ -115,17 +120,20 @@ class AgspExtendedSession(AgspSession):
             virtuals_to_add_as_sensor = list()
             for wanted_virtual_name in self.allowed_virtual_types:
                 # recherche de la ou des datasource a partir d'un nom
-                available_virtual_list = self.find_virtual_datasource(
-                    virtual_datasource_dict, wanted_virtual_name
+                available_virtuals_list = self.find_virtual_datasource(
+                    virtual_datasource_dict, wanted_virtual_name,excluded_patterns_list=self.excluded_virtual_types_pattern
                 )
                 # on doit retourner cibler qu'un seul element dans la liste.
-                if len(available_virtual_list) == 1:
-                    virtuals_to_add_as_sensor.append(available_virtual_list[0])
-                elif len(available_virtual_list) > 2:
+                if len(available_virtuals_list) == 1:
+                    virtuals_to_add_as_sensor.append(available_virtuals_list[0])
+                elif len(available_virtuals_list) > 2:
+                    # Sinon emmition d'un warning avec les details
                     logger.warning(
                         "Attention %d > 1 virtual find for %s wanted virtual name"
-                        % (len(available_virtual_list), wanted_virtual_name)
+                        % (len(available_virtuals_list), wanted_virtual_name)
                     )
+                    for virtual in available_virtuals_list :
+                        logger.warning ("   - %s" % virtual)
 
             # Converstion de la datasource en capteur virtuel sur lagribases
             for to_be_converted_as_sensor in virtuals_to_add_as_sensor:
@@ -136,23 +144,27 @@ class AgspExtendedSession(AgspSession):
         return False
 
     def show_virtual_datasource_catalog(self, abs):
-        print("")
-        print("***********************************************************************")
-        print("CATALOG virtual datasource on  agribase %s" % abs)
+        logger.info("")
+        logger.info("***********************************************************************")
+        logger.info("CATALOG virtual datasource on  agribase %s" % abs)
 
         virtual_datasource_dict = self.connector.get_available_virtual_datasources(abs)
-        print(abs)
+        logger.info(abs)
         for key in virtual_datasource_dict:
             if key != "ALL":
-                print("")
-                print("- MeasureType :%s" % key)
                 for virtual_datasource in virtual_datasource_dict[key]:
-                    print("\t\t - %s" % virtual_datasource)
+                    logger.info("\t\t - %s" % virtual_datasource)
 
-    def find_virtual_datasource(self, virtual_datasource_dict, string):
+    def find_virtual_datasource(self, virtual_datasource_dict, wanted_pattern,excluded_patterns_list=None):
         returnv = list()
         for datasource in virtual_datasource_dict["ALL"]:
-            if datasource.contains_pattern(string):
+            is_excluded = False
+            if excluded_patterns_list is not None :
+                for excluded_pattern in excluded_patterns_list :
+                    if datasource.contains_pattern(excluded_pattern) :
+                        is_excluded = True
+                        
+            if is_excluded==False and datasource.contains_pattern(wanted_pattern) :
                 returnv.append(datasource)
         return returnv
 

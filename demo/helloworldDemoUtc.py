@@ -15,6 +15,11 @@ from datetime import timedelta
 import time
 from agstream.session import AgspSession
 
+import os
+if not os.path.exists('./test_outputs/'):
+    os.makedirs('./test_outputs/')
+
+
 t0 = time.time()
 session = AgspSession(timezoneName="UTC")
 session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)
@@ -31,7 +36,7 @@ for abs in session.agribases:
     df = session.getAgribaseDataframe(abs)
     print("Récuperation de %d données" % (df.shape[0] * df.shape[1]))
     print(df.head())
-    xlsFileName = "%s.xlsx" % abs.name
+    xlsFileName = "./test_outputs/%s.xlsx" % abs.name
     print("Ecriture des  données dans le fichier %s " % xlsFileName)
     # suppression des timezone, car excel ne le supporte pas
     df = session.remove_any_timezone_info(df)

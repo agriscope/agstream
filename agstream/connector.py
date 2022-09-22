@@ -14,7 +14,6 @@
 
 
 """
-from __future__ import print_function
 from __future__ import division
 
 from future import standard_library
@@ -110,7 +109,6 @@ class AgspConnecteur(object):
             self.sessionOpen = False
             self.agspSessionId = -1
         elif obj["loginOk"] == True:
-            # print("Agriscope session open for login " + login_p)
             self.sessionOpen = True
             self.agspSessionId = obj["agriscopeSessionId"]
         elif obj["loginOk"] == False:
@@ -195,9 +193,7 @@ class AgspConnecteur(object):
         if tmpJson is None:
             return returnv
 
-        # print "      "
-        # print "      "
-        # print tmpJson
+
         now = datetime.datetime.now()
 
         # "returnStatus" : "RETURN_STATUS_OK",
@@ -238,12 +234,6 @@ class AgspConnecteur(object):
             nbData = nbData + atomic_nb_data
             returnv[atomic_sensor_id] = atomic_data_tuple
         deltams = (t1 - t0) * 1000
-        # if nbData > 2 :
-        #     dat0 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][0])
-        #     dat1 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][-1])
-        # print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms first %s last %s ' % (now,nbData,deltams,nbData/deltams,dat0,dat1))
-        # else :
-        #     print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms ' % (now,nbData,deltams,nbData/deltams))
 
         return returnv
 
@@ -287,21 +277,13 @@ class AgspConnecteur(object):
             + "}}"
         )
         tmpJson = self.__executeJsonRequest(url, "getSensorData()")
-        # print "      "
-        # print "      "
-        # print tmpJson
+
+
         now = datetime.datetime.now()
 
         t1 = time.time()
         nbData = len(tmpJson["atomicResults"][0]["dataValues"])
         deltams = (t1 - t0) * 1000
-
-        # if nbData > 2 :
-        #     dat0 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][0])
-        #     dat1 = self.__convertUnixTimeStamp2PyDate(tmpJson['atomicResults'][0]['dataDates'][-1])
-        # print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms first %s last %s ' % (now,nbData,deltams,nbData/deltams,dat0,dat1))
-        # else :
-        #     print ('%s GetSensorData  get %d data en %d ms soit %.1f data/ms ' % (now,nbData,deltams,nbData/deltams))
 
         return (
             tmpJson["atomicResults"][0]["dataDates"],
@@ -318,7 +300,6 @@ class AgspConnecteur(object):
         # convert datasourceHashKey to server datasource key, dividing by the serial number
         # Lors de la
         realAgspDatasourceKey = datasourceHashKey / agribaseSn
-        # print "getjson abs=%d key=%d , realkey = %d" % (datasourceHashKey, agribaseSn,realAgspDatasourceKey )
 
         url = (
             self.server
@@ -352,7 +333,6 @@ class AgspConnecteur(object):
             for tmpjson in json["dataSources"]:
                 for tmp2Json in json["dataSources"][tmpjson]:
                     dataSrc = VirtualDataSource()
-                    # print tmp2Json
                     dataSrc.loadFromJson(tmp2Json)
                     if "ALL" not in datasourcesByMeasuretypeDict:
                         datasourcesByMeasuretypeDict["ALL"] = list()
@@ -420,12 +400,11 @@ class AgspConnecteur(object):
                     logger.warning(str(i) + " retry connection ")
 
             if retry == 0:
-                print("Probleme de connexion pour aller vers " + url)
+                logger.error("Probleme de connexion pour aller vers " + url)
                 return
             str_response = response.read().decode("utf-8")
 
             if self.debug == True:
-                #print (str_response)
                 logger.debug(str_response)
             obj = json.loads(str_response, strict=False)
             infomessage = "N/A"
@@ -468,18 +447,12 @@ class AgspConnecteur(object):
         # ----------------------------------------------------------------------
         # Traceback (most recent call last):
         #  File "C:\Users\guillaume\Documents\Developpement\django\trunk\datatooling\pandas\tests\agspUniversTests.py", line 37, in test_firstUnivers
-        # print unixtimeStamp
         if unixtimeStamp < 0:
             unixtimeStamp = 1
-        # print "unixtimestamp=" + unicode(unixtimeStamp)
         returnv = pytz.utc.localize(
             datetime.datetime.utcfromtimestamp(old_div(unixtimeStamp, 1000))
         )
-        # print unicode(returnv)
-        # print "%s" % returnv.year
-        # if (returnv.year == 1992) :
 
-        # print "%d %s" % (unixtimeStamp, unicode(returnv))
         return returnv
 
     def set_debug(self, value):

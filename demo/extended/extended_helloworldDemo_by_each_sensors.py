@@ -14,10 +14,13 @@ import datetime
 from datetime import timedelta
 import time
 from agstream.session_extended import AgspExtendedSession
-
+import os
+if not os.path.exists('./test_outputs/'):
+    os.makedirs('./test_outputs/')
 t0 = time.time()
 session = AgspExtendedSession(
-    wanted_virtual_types=["POINT ROSE", "HEURES DE FROID", "HUMIDE"]
+    wanted_virtual_types=["POINT ROSE", "HEURES DE FROID", "HUMIDE", "DPV"],
+      excluded_virtual_types_pattern=["HEURE"]
 )
 session.login("masnumeriqueAgStream", "1AgStream", updateAgribaseInfo=True)
 session.describe()
