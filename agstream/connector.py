@@ -71,7 +71,11 @@ class AgspConnecteur(object):
     def __init__(self, server="jsonapi.agriscope.fr"):
         self.sessionOpen = False
         self.agspSessionId = 0
-        self.server = "https://" + server
+        if 'http://' in server :
+            self.server = server
+        else :
+            self.server = "https://" + server
+        
         self.application = "/agriscope-web/app"
         self.lastLogin = "undefined"
         self.lastPassword = "undefined"

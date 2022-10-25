@@ -178,11 +178,13 @@ class Sensor(object):
         self.name = json["name"]
         self.sensorType = json["sensorType"]
         self.measureType = json["measureType"]
-        self.unit = json["unit"]
+        if "unit" in json :
+            self.unit = json["unit"]
         self.agspSensorId = json["internalId"]
         self.sensorPosition = json["channelPosition"]
         self.modulePosition = json["modulePosition"]
-        self.sensor_params = json["sensorParams"]
+        if "sensorParams" in json :
+            self.sensor_params = json["sensorParams"]
         self.isVirtualDriver = False
         self.agribase_serial_number = -1
 
