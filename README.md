@@ -15,6 +15,7 @@ data analysis comming from agricultural field.
   
 What's New
 ===========
+- (2023/05) v2.0.11 : - syntax error correction when something dirty is coming
 - (2022/09) v2.0.10 : - add excluded_virtual_types_pattern to exclude some virtual
                         on demand
 					  - Add some robust thing agains dirty event (DST switch, sensor id move)

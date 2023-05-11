@@ -331,7 +331,7 @@ class AgspSession(object):
                 "!! retry api getSensorDataframeReal(%d,%s, %s, %s)"
                 % (sensorid, sensor_name, from_p, to_p)
             )
-            dataframe = self.self.getSensorDataframeReal(
+            dataframe = self.getSensorDataframeReal(
                 sensorid, sensor_name, from_p, to_p
             )
         dataframe = self.__check_datagram_interval_limits(dataframe, from_p, to_p)
@@ -366,7 +366,7 @@ class AgspSession(object):
                 "!! retry api getVirtualSensorDataframeReal(%d,%d, %s, %s)"
                 % (sensorid, agribase_sn, from_p, to_p)
             )
-            dataframe = self.self.getVirtualSensorDataframeReal(
+            dataframe = self.getVirtualSensorDataframeReal(
                 sensorid, agribase_sn, from_p, to_p
             )
         dataframe = self.__check_datagram_interval_limits(dataframe, from_p, to_p)

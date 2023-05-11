@@ -7,6 +7,8 @@ pip install twine
 pip install wheel
 #prepare package
 
+
+rm -R dist
 python setup.py sdist
 python setup.py bdist_wheel
 
